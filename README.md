@@ -15,17 +15,31 @@ All MCP server blueprints are located under `mcp-blueprints/`, categorized by se
 Agy-MCP/
 ├── mcp-blueprints/
 │   ├── nas-tools/             # Blueprint for NAS systems and shell automation
-│   │   ├── BLUEPRINT.md       # Architectural guides and instructions
-│   │   ├── schemas/           # Reusable JSON schema templates
-│   │   └── templates/         # Configuration snippets (.env.example, etc.)
+│   │   ├── BLUEPRINT.md
+│   │   ├── schemas/
+│   │   └── templates/
 │   │
-│   └── postgres-mcp/          # Blueprint for secure Postgres DB operations
-│       ├── BLUEPRINT.md
-│       ├── schemas/
-│       └── templates/
+│   ├── postgres-mcp/          # Blueprint for secure Postgres DB operations
+│   │   ├── BLUEPRINT.md
+│   │   ├── schemas/
+│   │   └── templates/
+│   │
+│   ├── vault-bridge-mcp/      # Blueprint for Project Fortress secrets management
+│   │   ├── BLUEPRINT.md
+│   │   └── templates/
+│   │
+│   ├── data-analyst-mcp/      # Blueprint for structured logs/CSV parsing (In Progress)
+│   │   └── BLUEPRINT.md
+│   │
+│   ├── office-mcp/            # Blueprint for office documents & PDFs builder (In Progress)
+│   │   └── BLUEPRINT.md
+│   │
+│   └── web-search-mcp/        # Blueprint for automated web search indexing (In Progress)
+│       └── BLUEPRINT.md
 │
 ├── boilerplates/              # Quickstart code bases for new MCP developments
 └── README.md                  # This main directory index
+
 ```
 
 ---
