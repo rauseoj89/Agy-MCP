@@ -1,4 +1,4 @@
-# Agy-MCP 🛡️
+#🛡️ Agy-MCP : Hardened Blueprints for Local MCP Workflows
 
 Agy-MCP is a centralized, self-documenting library of **Model Context Protocol (MCP)** blueprints, schemas, and configurations. It is designed similarly to `Agy-Skills`, housing complete descriptions and instructions for all custom tools and integrations used by AI coding assistants (like Antigravity) to manage and interact with home server infrastructure securely.
 
