@@ -15,5 +15,5 @@
 ---
 
 ## 🛠️ Status & Development Notes
-* This MCP is located in `P:\Workspaces\Development\Efficiency-Core\mcp\web-search-mcp`.
+* This MCP is located in `${MCP_SERVERS_DIR}/web-search-mcp`.
 * Designed to enable fast reference lookups while keeping coding assistants updated on modern dependencies.

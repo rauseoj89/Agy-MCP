@@ -19,5 +19,5 @@
 ---
 
 ## 🛠️ Status & Development Notes
-* This MCP is located in `P:\Workspaces\Development\Efficiency-Core\mcp\office-mcp`.
+* This MCP is located in `${MCP_SERVERS_DIR}/office-mcp`.
 * Main files: `readers.ts` handles reading engines, `writers.ts` drives file compilers, and `legacy_reader.py` processes older binaries.

@@ -21,9 +21,9 @@
 Use the following local `.env` setup, ensuring to load secrets from Project Fortress Vault dynamically instead of raw values in code:
 ```bash
 # 🗄️ DATABASE CONNECTION
-DB_HOST=192.168.1.10
+DB_HOST=${DB_HOST}
 DB_PORT=5432
-DB_USER=dev_jimmy
-DB_DATABASE=postgres
-DB_PASSWORD=__VAULT_SECRET_DB_PASSWORD__
+DB_USER=${DB_USER}
+DB_DATABASE=${DB_DATABASE}
+DB_PASSWORD=${VAULT_SECRET_DB_PASSWORD}
 ```

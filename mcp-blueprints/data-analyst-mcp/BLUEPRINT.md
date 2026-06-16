@@ -16,5 +16,5 @@
 ---
 
 ## 🛠️ Status & Development Notes
-* This MCP is located in `P:\Workspaces\Development\Efficiency-Core\mcp\data-analyst-mcp`.
-* Currently in development inside the **`Efficiency-Core`** workspace.
+* This MCP is located in `${MCP_SERVERS_DIR}/data-analyst-mcp`.
+* Currently in development inside the **`${WORKSPACE_NAME}`** workspace.

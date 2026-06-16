@@ -23,10 +23,10 @@
 Store the environment settings in a local, uncommitted `.env` file pointing to your TrueNAS SSH credentials:
 ```bash
 # 🛡️ SYSTEM SECURITY (SSH-Powered)
-REMOTE_HOST=dev_jimmy@<your-server-ip>
-SSH_KEY_PATH=C:/Users/JimmyR/.ssh/id_rsa
+REMOTE_HOST=${REMOTE_USER}@${REMOTE_IP}
+SSH_KEY_PATH=${SSH_KEY_PATH}
 
 # 🛠️ CORE CONFIGURATION
-NAS_ROOT_PATH=/mnt/data_raid/mcp_projects
+NAS_ROOT_PATH=${NAS_ROOT_PATH}
 MANAGED_HUBS=Infrastructure,Workspaces,Shared
 ```

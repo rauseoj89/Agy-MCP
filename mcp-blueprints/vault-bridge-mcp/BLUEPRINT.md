@@ -27,12 +27,12 @@ Connect your AI environment using this template, injecting your AppRole credenti
     "vault-bridge-mcp": {
       "command": "node",
       "args": [
-        "P:/Infrastructure/Fortress/vault-bridge-mcp/build/index.js"
+        "${VAULT_BRIDGE_DIR}/build/index.js"
       ],
       "env": {
-        "VAULT_ADDR": "http://192.168.1.10:8200",
-        "VAULT_ROLE_ID": "__VAULT_ROLE_ID__",
-        "VAULT_SECRET_ID": "__VAULT_SECRET_ID__",
+        "VAULT_ADDR": "${VAULT_ADDR}",
+        "VAULT_ROLE_ID": "${VAULT_ROLE_ID}",
+        "VAULT_SECRET_ID": "${VAULT_SECRET_ID}",
         "VAULT_SECRET_MOUNT": "secret"
       }
     }
