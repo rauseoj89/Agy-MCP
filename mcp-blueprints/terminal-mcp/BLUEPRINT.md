@@ -1,48 +1,52 @@
-# Terminal-MCP Blueprint 💻
+# Agy-MCP Blueprint: Terminal MCP 💻
 
-`terminal-mcp` provides a secure shell interface for AI assistants to run system diagnostics, check active configurations, and compile projects, enforcing strict shell parameter sanitization.
+This MCP server provides restricted, validated command-line execution capabilities, supporting PowerShell (Windows) or WSL/Bash (Linux) dual-mode with timeouts and argument limits.
 
-## 📁 Structure
+## 1. Architectural Overview
 
-* **`BLUEPRINT.md`**: This manual.
-* **`schemas/`**: JSON tool definition files.
+The Terminal MCP server validates commands against safety rules and executes them in subprocesses.
 
-## 🚀 Capabilities
+```mermaid
+graph TD
+    Agent([Agent / Client]) -->|JSON RPC| MCP[Terminal MCP]
+    MCP -->|Spawn Subprocess| Shell[PowerShell / WSL Bash]
+```
 
-1. **Run Command (`run_command`)**: Runs workstation-level commands using array-based argument spawns (no raw string evaluations).
-2. **Read Environment (`get_env_variables`)**: Queries active system environment variables without printing secrets.
-3. **OS Diagnostics (`get_os_info`)**: Inspects shell architectures, paths, and platform versions.
+## 2. Setup Requirements
 
----
+- **Runtime:** Node.js >= 18 or Python >= 3.10
+- **Shells:** PowerShell (Windows) or bash (WSL/Linux).
 
-## 🔒 Security & Deployment Configuration
+## 3. Environment Configuration (`.env.example`)
 
-### 🛡️ Shell Parameter Hardening
-All commands executed through this connector must bypass raw command processors (e.g. `cmd /c` or `bash -c`) where user-supplied inputs could lead to command injections. 
+No credentials in configuration. Allowed command patterns configurations:
+```env
+# 💻 ALLOWED COMMAND PREFIXES (Comma-separated)
+ALLOWED_COMMAND_PREFIXES=git,npm,pip,python,docker
+```
 
-- **Incorrect Integration**:
-  ```javascript
-  exec(`npm install ${package_name}`);
-  ```
-- **Correct Integration**:
-  ```javascript
-  spawn('npm', ['install', package_name]);
-  ```
+## 4. Least Privilege Design
 
-### `mcp_config.json` Snippet
+- **No Raw Shell Concatenation:** Commands are executed as child processes with strict array-based parameter parsing.
+- **Command Length Bounds:** Raw command string length is capped at 100 characters.
+- **Args Cap:** Maximum arguments array size is capped at 50.
+- **Command Allowlist:** Only commands matching allowlisted executables (e.g. `git`, `npm`) are executed. Destructive commands (e.g. `rm -rf /`) are blocked at the validation layer.
+
+## 5. Atomic Write Strategy
+
+- Output buffers are handled in-memory and returned as JSON. If outputting log files, atomic rename must be used.
+
+## 6. Deployment / Verification Plan
+
+Register the terminal server:
 ```json
 {
   "mcpServers": {
-    "terminal-mcp": {
-      "command": "node",
-      "args": [
-        "${TERMINAL_MCP_DIR}/build/index.js"
-      ],
-      "env": {
-        "PAGER": "cat",
-        "ALLOWED_COMMAND_PREFIXES": "git,npm,pytest,phpunit,docker"
-      }
+    "terminal": {
+      "command": "python",
+      "args": ["-m", "terminal_mcp"]
     }
   }
 }
 ```
+Verify by executing `git status` via the MCP.

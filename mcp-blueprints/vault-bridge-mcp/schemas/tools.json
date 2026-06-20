@@ -1,0 +1,126 @@
+{
+  "tools": [
+    {
+      "name": "get_secret",
+      "description": "Retrieve a secret value from the vault.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "namespace": {
+            "type": "string",
+            "enum": ["dev", "staging", "production"]
+          },
+          "path": {
+            "type": "string",
+            "maxLength": 255,
+            "pattern": "^[a-zA-Z0-9/_-]+$",
+            "description": "Vault storage path"
+          },
+          "key": {
+            "type": "string",
+            "maxLength": 100,
+            "pattern": "^[a-zA-Z0-9/_-]+$"
+          }
+        },
+        "required": ["namespace", "path", "key"]
+      }
+    },
+    {
+      "name": "put_secret",
+      "description": "Store a new secret or update an existing secret value.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "namespace": {
+            "type": "string",
+            "enum": ["dev", "staging", "production"]
+          },
+          "path": {
+            "type": "string",
+            "maxLength": 255,
+            "pattern": "^[a-zA-Z0-9/_-]+$"
+          },
+          "key": {
+            "type": "string",
+            "maxLength": 100,
+            "pattern": "^[a-zA-Z0-9/_-]+$"
+          },
+          "value": {
+            "type": "string",
+            "maxLength": 5000
+          }
+        },
+        "required": ["namespace", "path", "key", "value"]
+      }
+    },
+    {
+      "name": "list_secrets",
+      "description": "List keys under a secret storage path.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "namespace": {
+            "type": "string",
+            "enum": ["dev", "staging", "production"]
+          },
+          "path": {
+            "type": "string",
+            "maxLength": 255,
+            "pattern": "^[a-zA-Z0-9/_-]+$"
+          }
+        },
+        "required": ["namespace", "path"]
+      }
+    },
+    {
+      "name": "rotate_secret",
+      "description": "Generate a new secret value and rotate it in the vault.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "namespace": {
+            "type": "string",
+            "enum": ["dev", "staging", "production"]
+          },
+          "path": {
+            "type": "string",
+            "maxLength": 255,
+            "pattern": "^[a-zA-Z0-9/_-]+$"
+          },
+          "key": {
+            "type": "string",
+            "maxLength": 100,
+            "pattern": "^[a-zA-Z0-9/_-]+$"
+          }
+        },
+        "required": ["namespace", "path", "key"]
+      }
+    },
+    {
+      "name": "audit_secret_access",
+      "description": "Retrieve audit logs tracking access to a specific secret path.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "namespace": {
+            "type": "string",
+            "enum": ["dev", "staging", "production"]
+          },
+          "path": {
+            "type": "string",
+            "maxLength": 255,
+            "pattern": "^[a-zA-Z0-9/_-]+$"
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 20,
+            "description": "Maximum number of audit events (max 100)"
+          }
+        },
+        "required": ["namespace", "path"]
+      }
+    }
+  ]
+}

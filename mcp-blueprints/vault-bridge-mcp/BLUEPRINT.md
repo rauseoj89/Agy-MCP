@@ -1,41 +1,52 @@
-# Vault-Bridge-MCP Blueprint 🛡️
+# Agy-MCP Blueprint: Vault Bridge MCP 🔐
 
-`vault-bridge-mcp` acts as a secure connector between AI coding assistants and a HashiCorp Vault secrets management backend (Project Fortress). It manages access, creation, and rotation of project secrets using scoped AppRole permissions instead of raw root tokens.
+This MCP server acts as a secure bridge to HashiCorp Vault, providing secret retrieval, creation, namespace administration, and secret access audits.
 
-## 📁 Structure
+## 1. Architectural Overview
 
-* **`BLUEPRINT.md`**: This manual.
-* **`schemas/`**: JSON tool files for registration.
-* **`templates/`**: Setup config snippets.
+The Vault Bridge MCP connects local sessions to HashiCorp Vault API endpoints, strictly separating namespaces.
 
-## 🚀 Capabilities
+```mermaid
+graph TD
+    Agent([Agent / Client]) -->|JSON RPC| MCP[Vault Bridge MCP]
+    MCP -->|AppRole / TLS Auth| Vault[(HashiCorp Vault)]
+```
 
-1. **Get Secret (`get_secret`)**: Safely retrieves a decrypted value from a project path in Vault.
-2. **Put Secret (`put_secret`)**: Safely stores or updates a secret key-value pair under a specific project's path.
-3. **List Secrets (`list_secrets`)**: Enumerates secret paths assigned to the authenticated namespace.
-4. **Rotate Secret (`rotate_secret`)**: Integrates with target systems to update credentials and push the new values back to Vault dynamically.
+## 2. Setup Requirements
 
----
+- **Runtime:** Node.js >= 18 or Python >= 3.10
+- **Vault:** HashiCorp Vault reachable on the network.
 
-## 🔒 Security & Deployment Configuration
+## 3. Environment Configuration (`.env.example`)
 
-### `mcp_config.json` Snippet
-Connect your AI environment using this template, injecting your AppRole credentials securely:
+Inject AppRole credentials or tokens using project environment bindings:
+```env
+# 🔐 VAULT INTEGRATION
+VAULT_ADDR=https://vault.internal.network:8200
+VAULT_ROLE_ID=${VAULT_ROLE_ID}
+VAULT_SECRET_ID=${VAULT_SECRET_ID}
+```
+
+## 4. Least Privilege Design
+
+- **Namespace Scope:** AppRole access is restricted to specific namespaces (`dev`, `staging`, `production`).
+- **Input Validation:** Key paths enforce strict alphanumeric and slash/hyphen pattern checks.
+
+## 5. Atomic Write Strategy
+
+- Secret updates (`put_secret`) are handled atomically by Vault's backend.
+
+## 6. Deployment / Verification Plan
+
+Deploy using node:
 ```json
 {
   "mcpServers": {
-    "vault-bridge-mcp": {
+    "vault-bridge": {
       "command": "node",
-      "args": [
-        "${VAULT_BRIDGE_DIR}/build/index.js"
-      ],
-      "env": {
-        "VAULT_ADDR": "${VAULT_ADDR}",
-        "VAULT_ROLE_ID": "${VAULT_ROLE_ID}",
-        "VAULT_SECRET_ID": "${VAULT_SECRET_ID}",
-        "VAULT_SECRET_MOUNT": "secret"
-      }
+      "args": ["dist/vault_bridge_mcp.js"]
     }
   }
 }
 ```
+Verify by calling `list_secrets` on a non-production path.

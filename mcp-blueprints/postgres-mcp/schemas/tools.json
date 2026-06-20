@@ -1,0 +1,95 @@
+{
+  "tools": [
+    {
+      "name": "list_databases",
+      "description": "List all databases on the PostgreSQL server.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "list_tables",
+      "description": "List all tables in the current active database schema.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "schema": {
+            "type": "string",
+            "maxLength": 100,
+            "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$",
+            "default": "public"
+          }
+        },
+        "required": []
+      }
+    },
+    {
+      "name": "describe_table",
+      "description": "Show columns, types, indexes, and constraints for a table.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "schema": {
+            "type": "string",
+            "maxLength": 100,
+            "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$",
+            "default": "public"
+          },
+          "table": {
+            "type": "string",
+            "maxLength": 100,
+            "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$"
+          }
+        },
+        "required": ["table"]
+      }
+    },
+    {
+      "name": "execute_query",
+      "description": "Execute a SQL query (SELECT/DML/DDL). Defaults to read-only transaction execution.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "sql": {
+            "type": "string",
+            "maxLength": 10000,
+            "description": "SQL statement to execute (max 10,000 characters)"
+          },
+          "max_rows": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 10000,
+            "default": 1000,
+            "description": "Limit returned records (max 10,000)"
+          }
+        },
+        "required": ["sql"]
+      }
+    },
+    {
+      "name": "explain_query",
+      "description": "Run EXPLAIN ANALYZE on a SQL statement to retrieve its query execution plan.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "sql": {
+            "type": "string",
+            "maxLength": 10000
+          }
+        },
+        "required": ["sql"]
+      }
+    },
+    {
+      "name": "list_schemas",
+      "description": "List all schemas in the active database.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    }
+  ]
+}

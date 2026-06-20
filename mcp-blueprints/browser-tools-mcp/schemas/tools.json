@@ -1,0 +1,253 @@
+{
+  "tools": [
+    {
+      "name": "new_page",
+      "description": "Create a new tab/page.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "close_page",
+      "description": "Close a specific page.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "page_id": {
+            "type": "string",
+            "maxLength": 100,
+            "pattern": "^[a-zA-Z0-9_-]+$"
+          }
+        },
+        "required": ["page_id"]
+      }
+    },
+    {
+      "name": "navigate_page",
+      "description": "Navigate to a URL.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "maxLength": 2048,
+            "pattern": "^https?://"
+          }
+        },
+        "required": ["url"]
+      }
+    },
+    {
+      "name": "click",
+      "description": "Click an element.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "selector": {
+            "type": "string",
+            "maxLength": 1000
+          }
+        },
+        "required": ["selector"]
+      }
+    },
+    {
+      "name": "fill",
+      "description": "Fill a form input element.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "selector": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "value": {
+            "type": "string",
+            "maxLength": 5000
+          }
+        },
+        "required": ["selector", "value"]
+      }
+    },
+    {
+      "name": "type_text",
+      "description": "Type text into focused element.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "maxLength": 5000
+          }
+        },
+        "required": ["text"]
+      }
+    },
+    {
+      "name": "press_key",
+      "description": "Press a key.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "maxLength": 50,
+            "pattern": "^[a-zA-Z0-9_-]+$"
+          }
+        },
+        "required": ["key"]
+      }
+    },
+    {
+      "name": "wait_for",
+      "description": "Wait for an element or timeout.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "selector": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "timeout": {
+            "type": "integer",
+            "minimum": 100,
+            "maximum": 60000
+          }
+        },
+        "required": []
+      }
+    },
+    {
+      "name": "take_screenshot",
+      "description": "Capture page screenshot.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "full_page": {
+            "type": "boolean"
+          }
+        },
+        "required": []
+      }
+    },
+    {
+      "name": "take_snapshot",
+      "description": "Take page DOM snapshot.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "list_console_messages",
+      "description": "List console logs.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "list_network_requests",
+      "description": "List network traffic log.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "lighthouse_audit",
+      "description": "Run Lighthouse audit.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": ["performance", "accessibility", "best-practices", "seo", "all"]
+          }
+        },
+        "required": []
+      }
+    },
+    {
+      "name": "performance_start_trace",
+      "description": "Start trace capture.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "performance_stop_trace",
+      "description": "Stop trace capture.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "performance_analyze_insight",
+      "description": "Analyze trace data.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    },
+    {
+      "name": "resize_page",
+      "description": "Resize viewport.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "width": {
+            "type": "integer",
+            "minimum": 320,
+            "maximum": 3840
+          },
+          "height": {
+            "type": "integer",
+            "minimum": 320,
+            "maximum": 3840
+          }
+        },
+        "required": ["width", "height"]
+      }
+    },
+    {
+      "name": "evaluate_script",
+      "description": "Run JavaScript in page context.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "script": {
+            "type": "string",
+            "maxLength": 5000
+          }
+        },
+        "required": ["script"]
+      }
+    },
+    {
+      "name": "select_page",
+      "description": "Focus a specific page.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "page_id": {
+            "type": "string",
+            "maxLength": 100,
+            "pattern": "^[a-zA-Z0-9_-]+$"
+          }
+        },
+        "required": ["page_id"]
+      }
+    }
+  ]
+}

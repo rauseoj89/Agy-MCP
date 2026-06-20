@@ -1,0 +1,163 @@
+{
+  "tools": [
+    {
+      "name": "read_file",
+      "description": "Read the contents of a file.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "maxLength": 1000,
+            "description": "Absolute path to the file"
+          }
+        },
+        "required": ["path"]
+      }
+    },
+    {
+      "name": "write_file",
+      "description": "Write a complete file.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "maxLength": 1000,
+            "description": "Absolute path to write to"
+          },
+          "content": {
+            "type": "string",
+            "maxLength": 10485760,
+            "description": "File contents (max 10MB)"
+          }
+        },
+        "required": ["path", "content"]
+      }
+    },
+    {
+      "name": "append_file",
+      "description": "Append content to an existing file.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "maxLength": 1000,
+            "description": "Absolute path to the file"
+          },
+          "content": {
+            "type": "string",
+            "maxLength": 10485760,
+            "description": "Content to append (max 10MB)"
+          }
+        },
+        "required": ["path", "content"]
+      }
+    },
+    {
+      "name": "read_multiple_files",
+      "description": "Read multiple files in a single batch operation.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "paths": {
+            "type": "array",
+            "maxItems": 20,
+            "items": {
+              "type": "string",
+              "maxLength": 1000
+            },
+            "description": "List of absolute file paths (max 20)"
+          }
+        },
+        "required": ["paths"]
+      }
+    },
+    {
+      "name": "create_directory",
+      "description": "Create a new directory.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "maxLength": 1000,
+            "description": "Absolute path to directory to create"
+          }
+        },
+        "required": ["path"]
+      }
+    },
+    {
+      "name": "list_directory",
+      "description": "List contents of a directory.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "maxLength": 1000,
+            "description": "Absolute path to list"
+          }
+        },
+        "required": ["path"]
+      }
+    },
+    {
+      "name": "move_file",
+      "description": "Move or rename a file/directory.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "maxLength": 1000,
+            "description": "Source path"
+          },
+          "destination": {
+            "type": "string",
+            "maxLength": 1000,
+            "description": "Destination path"
+          }
+        },
+        "required": ["source", "destination"]
+      }
+    },
+    {
+      "name": "get_file_info",
+      "description": "Retrieve file metadata (size, permissions, timestamps).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "maxLength": 1000,
+            "description": "Absolute path to the file"
+          }
+        },
+        "required": ["path"]
+      }
+    },
+    {
+      "name": "search_files",
+      "description": "Search for files matching a pattern.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "maxLength": 1000,
+            "description": "Root path to search from"
+          },
+          "pattern": {
+            "type": "string",
+            "maxLength": 100,
+            "description": "Filename pattern (glob/text)"
+          }
+        },
+        "required": ["path", "pattern"]
+      }
+    }
+  ]
+}

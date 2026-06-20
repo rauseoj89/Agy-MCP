@@ -1,29 +1,54 @@
-# Postgres-MCP Blueprint 🗄️
+# Agy-MCP Blueprint: Postgres MCP 🗄️
 
-`postgres-mcp` is a secure PostgreSQL database connector, providing standard schema inspection, query execution, and database maintenance capabilities to AI assistants.
+This MCP server provides a secure PostgreSQL connector, exposing schema discovery, query execution (read-only by default), query planning (EXPLAIN), and table definition lookups.
 
-## 📁 Structure
+## 1. Architectural Overview
 
-* **`BLUEPRINT.md`**: This manual.
-* **`schemas/`**: JSON tool definition files.
-* **`templates/`**: Connection parameters.
+The Postgres MCP routes query requests from the agent to a database host.
 
-## 🚀 Capabilities
+```mermaid
+graph TD
+    Agent([Agent / Client]) -->|JSON RPC| MCP[Postgres MCP]
+    MCP -->|TCP Connection| DB[(PostgreSQL Database)]
+```
 
-1. **Database Explorer (`list_databases`, `list_tables`, `describe_table`)**: Scans databases, catalogs, primary keys, and table columns.
-2. **Safe Engine (`execute_query`)**: Executes direct SQL statements within defined scopes.
+## 2. Setup Requirements
 
----
+- **Runtime:** Node.js >= 18
+- **Database:** PostgreSQL >= 12 reachable on the network.
 
-## 🔒 Security & Deployment Configuration
+## 3. Environment Configuration (`.env.example`)
 
-### `.env` Structure
-Use the following local `.env` setup, ensuring to load secrets from Project Fortress Vault dynamically instead of raw values in code:
-```bash
-# 🗄️ DATABASE CONNECTION
+Align with vault structures for secret injection:
+```env
+# 🗄️ DATABASE CONFIGURATION
 DB_HOST=${DB_HOST}
 DB_PORT=5432
 DB_USER=${DB_USER}
 DB_DATABASE=${DB_DATABASE}
 DB_PASSWORD=${VAULT_SECRET_DB_PASSWORD}
 ```
+
+## 4. Least Privilege Design
+
+- **Read-Only by Default:** All standard query execution should be scoped to a read-only database user (DML role app_runner).
+- **Identifier Protection:** All schemas, tables, and column parameters enforce alphanumeric regex patterns to prevent SQL injection.
+
+## 5. Atomic Write Strategy
+
+- Non-applicable for reads. For migrations or write queries, transactions must be committed explicitly (`BEGIN; ... COMMIT;`).
+
+## 6. Deployment / Verification Plan
+
+Deploy using node:
+```json
+{
+  "mcpServers": {
+    "postgres": {
+      "command": "npx",
+      "args": ["-y", "mcp-server-postgres"]
+    }
+  }
+}
+```
+Verify by calling `list_databases` or `list_tables`.

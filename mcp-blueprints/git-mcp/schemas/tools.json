@@ -1,0 +1,138 @@
+{
+  "tools": [
+    {
+      "name": "git_status",
+      "description": "Show the working tree status.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "maxLength": 1000
+          }
+        },
+        "required": ["path"]
+      }
+    },
+    {
+      "name": "git_add",
+      "description": "Add file contents to the staging index.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "files": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "type": "string",
+              "maxLength": 255
+            }
+          }
+        },
+        "required": ["path", "files"]
+      }
+    },
+    {
+      "name": "git_commit",
+      "description": "Record changes to the repository with conventional commits validation.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "message": {
+            "type": "string",
+            "maxLength": 120,
+            "pattern": "^(feat|fix|docs|style|refactor|perf|test|chore|revert|ci|build)(\\([a-zA-Z0-9_-]+\\))?: [a-zA-Z0-9_\\-\\s.]{1,100}$",
+            "description": "Conventional commit message (e.g. 'feat(auth): add login validation')"
+          }
+        },
+        "required": ["path", "message"]
+      }
+    },
+    {
+      "name": "git_diff",
+      "description": "Show changes between commits, commit and working tree, etc.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "maxLength": 1000
+          }
+        },
+        "required": ["path"]
+      }
+    },
+    {
+      "name": "git_log",
+      "description": "Show commit logs.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 10,
+            "description": "Limit the number of commits returned (max 100)"
+          }
+        },
+        "required": ["path"]
+      }
+    },
+    {
+      "name": "git_push",
+      "description": "Update remote refs. Blocks force-pushing for safety.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "remote": {
+            "type": "string",
+            "maxLength": 50,
+            "pattern": "^[a-zA-Z0-9_-]+$"
+          },
+          "branch": {
+            "type": "string",
+            "maxLength": 100,
+            "pattern": "^[a-zA-Z0-9_/_-]+$"
+          }
+        },
+        "required": ["path", "remote", "branch"]
+      }
+    },
+    {
+      "name": "git_blame",
+      "description": "Show what revision and author last modified each line of a file.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "file": {
+            "type": "string",
+            "maxLength": 255,
+            "description": "File path relative to the repo root"
+          }
+        },
+        "required": ["path", "file"]
+      }
+    }
+  ]
+}

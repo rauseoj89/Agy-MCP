@@ -1,0 +1,173 @@
+{
+  "tools": [
+    {
+      "name": "read_word",
+      "description": "Read contents of a Microsoft Word (.docx) document.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "maxLength": 1000,
+            "pattern": "\\.docx$"
+          }
+        },
+        "required": ["path"]
+      }
+    },
+    {
+      "name": "write_word",
+      "description": "Create a new Microsoft Word (.docx) document.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "maxLength": 1000,
+            "pattern": "\\.docx$"
+          },
+          "content": {
+            "type": "string",
+            "maxLength": 5242880
+          }
+        },
+        "required": ["path", "content"]
+      }
+    },
+    {
+      "name": "append_to_word",
+      "description": "Append text or paragraphs to an existing Microsoft Word (.docx) document.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "maxLength": 1000,
+            "pattern": "\\.docx$"
+          },
+          "content": {
+            "type": "string",
+            "maxLength": 1048576
+          }
+        },
+        "required": ["path", "content"]
+      }
+    },
+    {
+      "name": "read_excel",
+      "description": "Read sheet data from a Microsoft Excel (.xlsx) spreadsheet.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "maxLength": 1000,
+            "pattern": "\\.xlsx$"
+          },
+          "max_rows": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100000,
+            "default": 10000,
+            "description": "Maximum number of rows to parse (max 100,000)"
+          }
+        },
+        "required": ["path"]
+      }
+    },
+    {
+      "name": "write_excel",
+      "description": "Write data rows into a Microsoft Excel (.xlsx) spreadsheet.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "maxLength": 1000,
+            "pattern": "\\.xlsx$"
+          },
+          "rows": {
+            "type": "array",
+            "maxItems": 100000,
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "maxLength": 1000
+              }
+            }
+          }
+        },
+        "required": ["path", "rows"]
+      }
+    },
+    {
+      "name": "read_powerpoint",
+      "description": "Read slide contents of a Microsoft PowerPoint (.pptx) presentation.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "maxLength": 1000,
+            "pattern": "\\.pptx$"
+          }
+        },
+        "required": ["path"]
+      }
+    },
+    {
+      "name": "write_powerpoint",
+      "description": "Create a new Microsoft PowerPoint (.pptx) presentation.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "maxLength": 1000,
+            "pattern": "\\.pptx$"
+          },
+          "slides": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "maxLength": 200
+                },
+                "body": {
+                  "type": "string",
+                  "maxLength": 2000
+                }
+              },
+              "required": ["title"]
+            }
+          }
+        },
+        "required": ["path", "slides"]
+      }
+    },
+    {
+      "name": "convert_to_pdf",
+      "description": "Convert docx or xlsx to PDF.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "source_path": {
+            "type": "string",
+            "maxLength": 1000,
+            "pattern": "\\.(docx|xlsx)$"
+          },
+          "dest_path": {
+            "type": "string",
+            "maxLength": 1000,
+            "pattern": "\\.pdf$"
+          }
+        },
+        "required": ["source_path", "dest_path"]
+      }
+    }
+  ]
+}

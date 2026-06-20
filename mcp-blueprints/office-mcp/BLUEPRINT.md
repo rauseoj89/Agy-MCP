@@ -1,23 +1,51 @@
-# Office-MCP Blueprint 📁 *(In Progress)*
+# Agy-MCP Blueprint: Office MCP 🏢
 
-`office-mcp` is a secure, automated document builder designed to read and generate word processing sheets, slides, spreadsheet files, and portable document formats (PDFs).
+This MCP server provides standard integrations for Microsoft Office documents (Word, Excel, PowerPoint) and PDF operations, supporting parsing, generation, and modifications.
 
-## 📁 Structure
+## 1. Architectural Overview
 
-* **`BLUEPRINT.md`**: This manual.
-* **`schemas/`**: JSON tool definition files.
-* **`templates/`**: Word, Excel, and PPT boilerplate structures.
+The Office MCP server acts as an interface between the agent and python/node libraries handling OOXML formats.
 
-## 🚀 Capabilities
+```mermaid
+graph TD
+    Agent([Agent / Client]) -->|JSON RPC| MCP[Office MCP]
+    MCP -->|Python/Node Scripts| Libs[openpyxl / python-docx / python-pptx]
+```
 
-1. **Read Office File (`read_office_file`)**: Loads and extracts text or cell blocks from `.docx`, `.xlsx`, and `.pdf` files.
-2. **Write Word Document (`write_word_document`)**: Dynamically writes structures, styles, and text blocks to a `.docx` file.
-3. **Write Excel Sheet (`write_excel_sheet`)**: Exports structured arrays, matrix grids, and math models into `.xlsx` documents.
-4. **Write PDF Document (`write_pdf_document`)**: Renders system audit files, reports, or invoices into standard `.pdf` outputs.
-5. **Write PowerPoint Presentation (`write_powerpoint_presentation`)**: Auto-builds slides, headers, and media blocks into a `.pptx` slide deck.
+## 2. Setup Requirements
 
----
+- **Runtime:** Node.js >= 18 or Python >= 3.10
+- **Libraries:** python-docx, openpyxl, python-pptx (if Python) or docx, exceljs (if Node.js)
 
-## 🛠️ Status & Development Notes
-* This MCP is located in `${MCP_SERVERS_DIR}/office-mcp`.
-* Main files: `readers.ts` handles reading engines, `writers.ts` drives file compilers, and `legacy_reader.py` processes older binaries.
+## 3. Environment Configuration (`.env.example`)
+
+No credentials:
+```env
+# 🏢 OFFICE PARSING CONSTRAINTS
+MAX_EXCEL_ROWS=100000
+MAX_SLIDES=100
+```
+
+## 4. Least Privilege Design
+
+- Document reads and writes are restricted to paths within allowlisted folders.
+- Execution timeout controls prevent hang/denial-of-service during parsing of large files.
+
+## 5. Atomic Write Strategy
+
+- File modifications and writes are written to a `.tmp` file and atomically renamed to the destination.
+
+## 6. Deployment / Verification Plan
+
+Register the server:
+```json
+{
+  "mcpServers": {
+    "office": {
+      "command": "python",
+      "args": ["-m", "office_mcp"]
+    }
+  }
+}
+```
+Verify by calling `read_word` or `read_excel` on a small test document.

@@ -1,0 +1,75 @@
+{
+  "tools": [
+    {
+      "name": "execute_command",
+      "description": "Run an approved command in the terminal asynchronously or synchronously.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "command": {
+            "type": "string",
+            "maxLength": 100,
+            "pattern": "^[a-zA-Z0-9_-]+$",
+            "description": "The command executable to run (e.g. 'git', 'npm')"
+          },
+          "args": {
+            "type": "array",
+            "maxItems": 50,
+            "items": {
+              "type": "string",
+              "maxLength": 255
+            },
+            "description": "Command arguments array (max 50)"
+          },
+          "timeout": {
+            "type": "integer",
+            "minimum": 1000,
+            "maximum": 300000,
+            "default": 30000,
+            "description": "Execution timeout in milliseconds (1,000 to 300,000)"
+          }
+        },
+        "required": ["command"]
+      }
+    },
+    {
+      "name": "kill_command",
+      "description": "Terminate a running command task.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "maxLength": 100,
+            "pattern": "^[a-zA-Z0-9_-]+$"
+          }
+        },
+        "required": ["task_id"]
+      }
+    },
+    {
+      "name": "get_command_status",
+      "description": "Get execution state, exits code, and log location of a terminal task.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "task_id": {
+            "type": "string",
+            "maxLength": 100,
+            "pattern": "^[a-zA-Z0-9_-]+$"
+          }
+        },
+        "required": ["task_id"]
+      }
+    },
+    {
+      "name": "list_commands",
+      "description": "List all active, completed, or failed terminal command tasks.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {},
+        "required": []
+      }
+    }
+  ]
+}

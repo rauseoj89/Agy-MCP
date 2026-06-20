@@ -2,7 +2,7 @@
 
 ![Agy-MCP Banner](agy_mcp_cover.png)
 
-Agy-MCP is a centralized, self-documenting library of **Model Context Protocol (MCP)** blueprints, schemas, and configurations. It is designed similarly to `Agy-Skills`, housing complete descriptions and instructions for all custom tools and integrations used by AI coding assistants (like Antigravity) to manage and interact with home server infrastructure securely.
+Agy-MCP is a centralized, self-documenting library of **Model Context Protocol (MCP)** blueprints, schemas, and configurations. It is designed housing complete descriptions, instructions, and schemas for all tools and integrations used by AI coding assistants to manage and interact with home server infrastructure securely.
 
 ---
 
@@ -13,44 +13,55 @@ All MCP server blueprints are located under `mcp-blueprints/`, categorized by se
 ```
 Agy-MCP/
 ├── mcp-blueprints/
+│   ├── browser-tools-mcp/     # Browser automation, visual validation & audits (Lighthouse) [NEW]
+│   │   ├── BLUEPRINT.md
+│   │   └── schemas/tools.json
+│   │
+│   ├── data-analyst-mcp/      # In-memory CSV/JSON data cleansing & anomaly stats
+│   │   ├── BLUEPRINT.md
+│   │   └── schemas/tools.json
+│   │
+│   ├── filesystem-mcp/        # Local filesystem read, write, list and search operations [NEW]
+│   │   ├── BLUEPRINT.md
+│   │   └── schemas/tools.json
+│   │
+│   ├── git-mcp/               # Workspace git operations with conventional-commit gates
+│   │   ├── BLUEPRINT.md
+│   │   └── schemas/tools.json
+│   │
+│   ├── markitdown-mcp/        # PDF/Word/Excel conversion to Markdown [NEW]
+│   │   ├── BLUEPRINT.md
+│   │   └── schemas/tools.json
+│   │
 │   ├── nas-tools/             # Blueprint for NAS systems and shell automation
 │   │   ├── BLUEPRINT.md
-│   │   ├── schemas/
 │   │   └── templates/
 │   │
-│   ├── postgres-mcp/          # Blueprint for secure Postgres DB operations
+│   ├── office-mcp/            # Microsoft Office Word, Excel, PowerPoint generators
 │   │   ├── BLUEPRINT.md
-│   │   ├── schemas/
-│   │   └── templates/
+│   │   └── schemas/tools.json
 │   │
-│   ├── vault-bridge-mcp/      # Blueprint for Project Fortress secrets management
+│   ├── postgres-mcp/          # Secure PostgreSQL DB query & schema explorer
 │   │   ├── BLUEPRINT.md
-│   │   └── templates/
+│   │   └── schemas/tools.json
 │   │
-│   ├── git-mcp/               # Blueprint for workspace git commands execution
-│   │   └── BLUEPRINT.md
+│   ├── terminal-mcp/          # Validated subprocess shell command executor
+│   │   ├── BLUEPRINT.md
+│   │   └── schemas/tools.json
 │   │
-│   ├── terminal-mcp/          # Blueprint for secure terminal execution
-│   │   └── BLUEPRINT.md
-│   │
-│   ├── data-analyst-mcp/      # Blueprint for structured logs/CSV parsing (In Progress)
-│   │   └── BLUEPRINT.md
-│   │
-│   ├── office-mcp/            # Blueprint for office documents & PDFs builder (In Progress)
-│   │   └── BLUEPRINT.md
-│   │
-│   └── web-search-mcp/        # Blueprint for automated web search indexing (In Progress)
-│       └── BLUEPRINT.md
+│   └── vault-bridge-mcp/      # Secrets bridge to HashiCorp Vault
+│       ├── BLUEPRINT.md
+│       └── schemas/tools.json
 │
 ├── boilerplates/              # Quickstart code bases for new MCP developments
-│   └── nodejs-mcp/            # Node.js template skeleton
 └── README.md                  # This main directory index
 ```
 
 ---
 
-## 🔒 Security Principles
+## 🔒 Security Principles (Hardened Vanilla)
 
-1. **Zero Raw Secrets:** Never commit real tokens, keys, passwords, or raw environment config files. Always use placeholders (`__SECRET__` or `VAULT_SECRET`) and point to a secure secrets manager (like Project Fortress Vault).
-2. **Standardized Schemas:** Tools schemas must be pure JSON and easily reusable across development environments.
-3. **AppRole Least Privilege:** Any blueprint utilizing system credentials should outline exact HCL security policies rather than root keys.
+1. **Zero Raw Secrets:** Never commit real tokens, keys, passwords, or raw environment config files. Always use placeholders (`${VAULT_SECRET_<NAME>}`) and point to a secure secrets manager.
+2. **Input Validation Schemas:** Every blueprint must contain a `schemas/tools.json` file defining strict parameters, types, `maxLength`, pattern regex, `minimum`/`maximum`, and array bounds (`maxItems`) to reject malformed inputs at the protocol layer.
+3. **Least Privilege Design:** Any blueprint utilizing system credentials should restrict access to designated namespaces (e.g. `dev`, `staging`, `production`) and limit actions (e.g., read-only by default for SQL databases, no force pushes for git).
+4. **Atomic Write Strategy:** Write operations that mutate files must first write to a `.tmp` buffer file and atomically rename it to the target path.
