@@ -1,4 +1,4 @@
-# Agy-MCP Blueprint: Vault Bridge MCP 🔐
+# Universal MCP Blueprint: Vault Bridge MCP 🔐
 
 This MCP server acts as a secure bridge to HashiCorp Vault, providing secret retrieval, creation, namespace administration, and secret access audits.
 
@@ -36,9 +36,10 @@ VAULT_SECRET_ID=${VAULT_SECRET_ID}
 
 - Secret updates (`put_secret`) are handled atomically by Vault's backend.
 
-## 6. Deployment / Verification Plan
+## 6. Multi-Agent Deployment & Verification Plan
 
-Deploy using node:
+### ▶️ Si estás en Antigravity / Hermes Agent:
+Configure in `mcp_config.json`:
 ```json
 {
   "mcpServers": {
@@ -49,4 +50,22 @@ Deploy using node:
   }
 }
 ```
-Verify by calling `list_secrets` on a non-production path.
+
+### ▶️ Si estás en Cline / Roo Code:
+Add to the user's active configuration file:
+```json
+{
+  "mcpServers": {
+    "vault-bridge": {
+      "command": "node",
+      "args": ["dist/vault_bridge_mcp.js"]
+    }
+  }
+}
+```
+
+### ⚠️ Si NO tienes soporte de MCP (Fallback):
+- Guíe al usuario para obtener o registrar secretos usando la CLI oficial de Vault (`vault kv get`).
+- Indique al desarrollador que inyecte las variables en su entorno local de desarrollo.
+
+Verify operation by calling `list_secrets` on a non-production path.

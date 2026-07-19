@@ -1,4 +1,4 @@
-# Agy-MCP Blueprint: Postgres MCP 🗄️
+# Universal MCP Blueprint: Postgres MCP 🗄️
 
 This MCP server provides a secure PostgreSQL connector, exposing schema discovery, query execution (read-only by default), query planning (EXPLAIN), and table definition lookups.
 
@@ -38,9 +38,10 @@ DB_PASSWORD=${VAULT_SECRET_DB_PASSWORD}
 
 - Non-applicable for reads. For migrations or write queries, transactions must be committed explicitly (`BEGIN; ... COMMIT;`).
 
-## 6. Deployment / Verification Plan
+## 6. Multi-Agent Deployment & Verification Plan
 
-Deploy using node:
+### ▶️ Si estás en Antigravity / Hermes Agent:
+Configure this server in your agent's `mcp_config.json`:
 ```json
 {
   "mcpServers": {
@@ -51,4 +52,22 @@ Deploy using node:
   }
 }
 ```
-Verify by calling `list_databases` or `list_tables`.
+
+### ▶️ Si estás en Cline / Roo Code:
+Add to `.clinerules` / `.roo-code-instructions` or the global MCP settings:
+```json
+{
+  "mcpServers": {
+    "postgres": {
+      "command": "npx",
+      "args": ["-y", "mcp-server-postgres"]
+    }
+  }
+}
+```
+
+### ⚠️ Si NO tienes soporte de MCP (Fallback):
+- Guíe al usuario para ejecutar consultas directas a la base de datos usando `psql` o un cliente gráfico.
+- Generar el código SQL exacto y pedir al usuario que pegue los resultados obtenidos.
+
+Verify installation by calling `list_databases` or `list_tables`.
