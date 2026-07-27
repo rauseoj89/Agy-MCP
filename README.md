@@ -49,6 +49,10 @@ Agy-MCP/
 │   │   ├── BLUEPRINT.md
 │   │   └── schemas/tools.json
 │   │
+│   ├── searxng-mcp/           # Privacy-respecting web search via local SearXNG engine [NEW]
+│   │   ├── BLUEPRINT.md
+│   │   └── schemas/tools.json
+│   │
 │   └── vault-bridge-mcp/      # Secrets bridge to HashiCorp Vault
 │       ├── BLUEPRINT.md
 │       └── schemas/tools.json
