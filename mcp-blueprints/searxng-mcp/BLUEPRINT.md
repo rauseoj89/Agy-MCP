@@ -7,7 +7,7 @@ This MCP server connects AI agents to a locally hosted SearXNG instance for priv
 ```mermaid
 graph TD
     Agent([Agent / Client]) -->|JSON-RPC via Stdio| MCP[SearXNG MCP Server]
-    MCP -->|HTTP GET /search| SearXNG[(SearXNG Engine - http://localhost:8080)]
+    MCP -->|HTTP GET /search| SearXNG[(SearXNG Engine - http://192.168.1.10:30053)]
 ```
 
 ## 2. Setup & Installation
@@ -21,11 +21,20 @@ cd P:\Infrastructure\MCP\searxng
 npm install
 ```
 
-## 3. Environment Configuration (`.env`)
+## 3. Server Requirement & Environment Configuration (`.env`)
 
+SearXNG must have JSON format enabled in its `/etc/searxng/settings.yml`:
+```yaml
+search:
+  formats:
+    - html
+    - json
+```
+
+Environment file (`.env`):
 ```env
-# URL pointing to local or network SearXNG instance
-SEARXNG_URL=http://localhost:8080
+# URL pointing to local or network SearXNG instance on TrueNAS
+SEARXNG_URL=http://192.168.1.10:30053
 ```
 
 ## 4. Client Manifest Example
@@ -39,7 +48,7 @@ SEARXNG_URL=http://localhost:8080
         "P:/Infrastructure/MCP/searxng/index.js"
       ],
       "env": {
-        "SEARXNG_URL": "http://localhost:8080"
+        "SEARXNG_URL": "http://192.168.1.10:30053"
       }
     }
   }
