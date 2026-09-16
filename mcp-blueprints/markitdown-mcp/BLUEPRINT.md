@@ -49,3 +49,7 @@ Deploy using node/npx or Python command line:
 }
 ```
 Verify the connection by calling `convert_file` on a test document to confirm markdown is returned.
+
+---
+**Author:** JimmyR  
+**Powered by:** AntigravityAI

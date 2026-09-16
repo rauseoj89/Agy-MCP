@@ -30,3 +30,7 @@ SSH_KEY_PATH=${SSH_KEY_PATH}
 NAS_ROOT_PATH=${NAS_ROOT_PATH}
 MANAGED_HUBS=Infrastructure,Workspaces,Shared
 ```
+
+---
+**Author:** JimmyR  
+**Powered by:** AntigravityAI

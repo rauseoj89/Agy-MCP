@@ -39,3 +39,7 @@ All custom tools built from this template must adhere to the central security gu
 1. **Parameterized Queries**: If interacting with databases, always parameterize inputs.
 2. **Array-based Execution**: If running external commands, never use `exec` with concatenated strings; always use `spawn` with array-based arguments.
 3. **Redact Logs**: Ensure that error exceptions catch raw stack traces, log them locally, and return generic references to the client.
+
+---
+**Author:** JimmyR  
+**Powered by:** AntigravityAI

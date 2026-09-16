@@ -1,172 +1,283 @@
 {
   "tools": [
     {
-      "name": "read_word",
-      "description": "Read contents of a Microsoft Word (.docx) document.",
+      "name": "read_office_file",
+      "description": "Read raw text content from existing Word (.docx), PowerPoint (.pptx), Excel (.xlsx), or PDF files.",
       "inputSchema": {
-        "type": "object",
         "properties": {
-          "path": {
-            "type": "string",
-            "maxLength": 1000,
-            "pattern": "\\.docx$"
+          "filePath": {
+            "description": "Path to the document to read",
+            "type": "string"
           }
         },
-        "required": ["path"]
+        "required": [
+          "filePath"
+        ],
+        "type": "object"
       }
     },
     {
-      "name": "write_word",
-      "description": "Create a new Microsoft Word (.docx) document.",
+      "name": "write_excel_sheet",
+      "description": "Create a new styled Microsoft Excel (.xlsx) workbook with multiple sheets, styled headers, and data rows.",
       "inputSchema": {
-        "type": "object",
         "properties": {
-          "path": {
-            "type": "string",
-            "maxLength": 1000,
-            "pattern": "\\.docx$"
-          },
-          "content": {
-            "type": "string",
-            "maxLength": 5242880
-          }
-        },
-        "required": ["path", "content"]
-      }
-    },
-    {
-      "name": "append_to_word",
-      "description": "Append text or paragraphs to an existing Microsoft Word (.docx) document.",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "path": {
-            "type": "string",
-            "maxLength": 1000,
-            "pattern": "\\.docx$"
-          },
-          "content": {
-            "type": "string",
-            "maxLength": 1048576
-          }
-        },
-        "required": ["path", "content"]
-      }
-    },
-    {
-      "name": "read_excel",
-      "description": "Read sheet data from a Microsoft Excel (.xlsx) spreadsheet.",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "path": {
-            "type": "string",
-            "maxLength": 1000,
-            "pattern": "\\.xlsx$"
-          },
-          "max_rows": {
-            "type": "integer",
-            "minimum": 1,
-            "maximum": 100000,
-            "default": 10000,
-            "description": "Maximum number of rows to parse (max 100,000)"
-          }
-        },
-        "required": ["path"]
-      }
-    },
-    {
-      "name": "write_excel",
-      "description": "Write data rows into a Microsoft Excel (.xlsx) spreadsheet.",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "path": {
-            "type": "string",
-            "maxLength": 1000,
-            "pattern": "\\.xlsx$"
-          },
-          "rows": {
-            "type": "array",
-            "maxItems": 100000,
-            "items": {
-              "type": "array",
-              "items": {
-                "type": "string",
-                "maxLength": 1000
-              }
-            }
-          }
-        },
-        "required": ["path", "rows"]
-      }
-    },
-    {
-      "name": "read_powerpoint",
-      "description": "Read slide contents of a Microsoft PowerPoint (.pptx) presentation.",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "path": {
-            "type": "string",
-            "maxLength": 1000,
-            "pattern": "\\.pptx$"
-          }
-        },
-        "required": ["path"]
-      }
-    },
-    {
-      "name": "write_powerpoint",
-      "description": "Create a new Microsoft PowerPoint (.pptx) presentation.",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "path": {
-            "type": "string",
-            "maxLength": 1000,
-            "pattern": "\\.pptx$"
-          },
-          "slides": {
-            "type": "array",
-            "maxItems": 100,
-            "items": {
-              "type": "object",
-              "properties": {
-                "title": {
-                  "type": "string",
-                  "maxLength": 200
+          "data": {
+            "properties": {
+              "sheets": {
+                "items": {
+                  "properties": {
+                    "columns": {
+                      "items": {
+                        "properties": {
+                          "header": {
+                            "type": "string"
+                          },
+                          "key": {
+                            "type": "string"
+                          },
+                          "width": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "header",
+                          "key"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "rows": {
+                      "items": {
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "style": {
+                      "properties": {
+                        "headerColor": {
+                          "description": "Hex text color (e.g. FFFFFF)",
+                          "type": "string"
+                        },
+                        "headerFill": {
+                          "description": "Hex fill (e.g. 1F4E78)",
+                          "type": "string"
+                        }
+                      },
+                      "type": "object"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "columns",
+                    "rows"
+                  ],
+                  "type": "object"
                 },
-                "body": {
-                  "type": "string",
-                  "maxLength": 2000
-                }
-              },
-              "required": ["title"]
-            }
+                "type": "array"
+              }
+            },
+            "required": [
+              "sheets"
+            ],
+            "type": "object"
+          },
+          "filePath": {
+            "description": "Path where the .xlsx file will be created",
+            "type": "string"
           }
         },
-        "required": ["path", "slides"]
+        "required": [
+          "filePath",
+          "data"
+        ],
+        "type": "object"
       }
     },
     {
-      "name": "convert_to_pdf",
-      "description": "Convert docx or xlsx to PDF.",
+      "name": "write_pdf_document",
+      "description": "Create a formatted PDF report with title, subtitle, divider lines, and text wrapping.",
       "inputSchema": {
-        "type": "object",
         "properties": {
-          "source_path": {
-            "type": "string",
-            "maxLength": 1000,
-            "pattern": "\\.(docx|xlsx)$"
+          "data": {
+            "properties": {
+              "paragraphs": {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              "subtitle": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "title",
+              "paragraphs"
+            ],
+            "type": "object"
           },
-          "dest_path": {
-            "type": "string",
-            "maxLength": 1000,
-            "pattern": "\\.pdf$"
+          "filePath": {
+            "description": "Path where the PDF will be created",
+            "type": "string"
           }
         },
-        "required": ["source_path", "dest_path"]
+        "required": [
+          "filePath",
+          "data"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "write_powerpoint_presentation",
+      "description": "Create a styled PowerPoint (.pptx) presentation deck with slide titles, bullet points, and text cards.",
+      "inputSchema": {
+        "properties": {
+          "data": {
+            "properties": {
+              "slides": {
+                "items": {
+                  "properties": {
+                    "texts": {
+                      "items": {
+                        "properties": {
+                          "bold": {
+                            "type": "boolean"
+                          },
+                          "color": {
+                            "type": "string"
+                          },
+                          "fontSize": {
+                            "type": "number"
+                          },
+                          "text": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "text"
+                        ],
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "title": {
+                      "type": "string"
+                    }
+                  },
+                  "type": "object"
+                },
+                "type": "array"
+              }
+            },
+            "required": [
+              "slides"
+            ],
+            "type": "object"
+          },
+          "filePath": {
+            "description": "Path where the .pptx file will be created",
+            "type": "string"
+          }
+        },
+        "required": [
+          "filePath",
+          "data"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "write_word_document",
+      "description": "Create a new styled Microsoft Word (.docx) document with titles, sections, paragraphs, bullet points, and tables.",
+      "inputSchema": {
+        "properties": {
+          "data": {
+            "description": "Structured document content",
+            "properties": {
+              "sections": {
+                "items": {
+                  "properties": {
+                    "content": {
+                      "items": {
+                        "properties": {
+                          "headers": {
+                            "items": {
+                              "type": "string"
+                            },
+                            "type": "array"
+                          },
+                          "rows": {
+                            "items": {
+                              "items": {
+                                "type": "string"
+                              },
+                              "type": "array"
+                            },
+                            "type": "array"
+                          },
+                          "text": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "enum": [
+                              "paragraph",
+                              "bullet",
+                              "table"
+                            ],
+                            "type": "string"
+                          }
+                        },
+                        "type": "object"
+                      },
+                      "type": "array"
+                    },
+                    "heading": {
+                      "type": "string"
+                    },
+                    "level": {
+                      "description": "1 to 3",
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "heading",
+                    "content"
+                  ],
+                  "type": "object"
+                },
+                "type": "array"
+              },
+              "subtitle": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "title",
+              "sections"
+            ],
+            "type": "object"
+          },
+          "filePath": {
+            "description": "Path where the .docx file will be created",
+            "type": "string"
+          }
+        },
+        "required": [
+          "filePath",
+          "data"
+        ],
+        "type": "object"
       }
     }
   ]

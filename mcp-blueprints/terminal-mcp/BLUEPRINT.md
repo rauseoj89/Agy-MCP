@@ -50,3 +50,7 @@ Register the terminal server:
 }
 ```
 Verify by executing `git status` via the MCP.
+
+---
+**Author:** JimmyR  
+**Powered by:** AntigravityAI

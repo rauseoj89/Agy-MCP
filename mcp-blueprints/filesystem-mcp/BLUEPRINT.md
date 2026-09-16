@@ -44,9 +44,14 @@ Deploy using npx, specifying allowlisted paths:
   "mcpServers": {
     "filesystem": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-filesystem", "C:\\Users\\JimmyR\\OneDrive\\Documentos\\Projects"]
+      "args": ["-y", "@modelcontextprotocol/server-filesystem", "${WORKSPACE_PATH}"]
     }
   }
 }
 ```
 Verify by calling `list_directory` on an allowed path to confirm files can be read.
+
+---
+**Author:** JimmyR  
+**Powered by:** AntigravityAI
+

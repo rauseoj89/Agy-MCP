@@ -50,3 +50,7 @@ Register the Git server:
 }
 ```
 Verify by calling `git_status` on the workspace.
+
+---
+**Author:** JimmyR  
+**Powered by:** AntigravityAI

@@ -1,132 +1,289 @@
 {
   "tools": [
     {
-      "name": "parse_csv",
-      "description": "Ingest and parse a local CSV file into memory.",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "path": {
-            "type": "string",
-            "maxLength": 1000
-          },
-          "max_rows": {
-            "type": "integer",
-            "minimum": 1,
-            "maximum": 100000,
-            "default": 50000,
-            "description": "Cap on rows to ingest (max 100,000)"
-          }
-        },
-        "required": ["path"]
-      }
-    },
-    {
-      "name": "parse_json",
-      "description": "Ingest and parse a local JSON dataset into memory.",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "path": {
-            "type": "string",
-            "maxLength": 1000
-          }
-        },
-        "required": ["path"]
-      }
-    },
-    {
-      "name": "clean_data",
-      "description": "Apply data hygiene rules (casing, timezone formatting, null-value replacement).",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "null_strategy": {
-            "type": "string",
-            "enum": ["drop", "zero", "default"]
-          },
-          "case_columns": {
-            "type": "array",
-            "maxItems": 50,
-            "items": {
-              "type": "string",
-              "maxLength": 100
-            }
-          }
-        },
-        "required": []
-      }
-    },
-    {
       "name": "calculate_metrics",
-      "description": "Compute statistical parameters (sums, averages, counts) on numeric columns.",
+      "description": "Compute statistical metrics (count, mean, median, min, max, stdDev, null/missing rate) for numeric columns in CSV or Excel files directly on the server without returning huge raw datasets.",
       "inputSchema": {
-        "type": "object",
         "properties": {
-          "target_columns": {
-            "type": "array",
-            "maxItems": 50,
-            "items": {
-              "type": "string",
-              "maxLength": 100
-            }
+          "filePath": {
+            "description": "Path to CSV or Excel file",
+            "type": "string"
           },
-          "operations": {
-            "type": "array",
-            "maxItems": 10,
+          "sheetName": {
+            "description": "Sheet name (if Excel file)",
+            "type": "string"
+          },
+          "targetColumns": {
+            "description": "Optional specific columns to compute metrics for (computes all numeric if omitted)",
             "items": {
-              "type": "string",
-              "enum": ["sum", "mean", "min", "max", "count"]
-            }
+              "type": "string"
+            },
+            "type": "array"
           }
         },
-        "required": ["target_columns", "operations"]
+        "required": [
+          "filePath"
+        ],
+        "type": "object"
       }
     },
     {
-      "name": "detect_anomalies",
-      "description": "Run standard deviation outlier checks on numeric values.",
+      "name": "clean_tabular_data",
+      "description": "Cleans a CSV or Excel file by trimming whitespace, normalizing dates to ISO 8601, and dropping empty rows, writing result to output file.",
       "inputSchema": {
-        "type": "object",
         "properties": {
-          "target_column": {
-            "type": "string",
-            "maxLength": 100
+          "dropEmptyRows": {
+            "description": "Drop rows that are completely empty (default: true)",
+            "type": "boolean"
           },
-          "std_dev_threshold": {
-            "type": "number",
-            "minimum": 1.0,
-            "maximum": 5.0,
-            "default": 3.0,
-            "description": "Outlier threshold in standard deviations (1.0 to 5.0)"
+          "inputPath": {
+            "description": "Path to input CSV or Excel file",
+            "type": "string"
+          },
+          "normalizeDates": {
+            "description": "Attempt ISO date normalization (default: true)",
+            "type": "boolean"
+          },
+          "outputPath": {
+            "description": "Path to write cleaned CSV",
+            "type": "string"
+          },
+          "trimWhitespace": {
+            "description": "Trim leading/trailing spaces (default: true)",
+            "type": "boolean"
           }
         },
-        "required": ["target_column"]
+        "required": [
+          "inputPath",
+          "outputPath"
+        ],
+        "type": "object"
       }
     },
     {
-      "name": "export_summary",
-      "description": "Export the calculated report or cleaned dataset.",
+      "name": "extract_pdf_data",
+      "description": "Extract text, metadata, page contents, and tabular text blocks from a PDF document.",
       "inputSchema": {
-        "type": "object",
         "properties": {
-          "output_path": {
-            "type": "string",
-            "maxLength": 1000
+          "filePath": {
+            "description": "Path to the PDF file",
+            "type": "string"
           },
-          "format": {
-            "type": "string",
-            "enum": ["csv", "json", "markdown"]
-          },
-          "max_rows": {
-            "type": "integer",
-            "minimum": 1,
-            "maximum": 500,
-            "default": 100,
-            "description": "Row limit for export (max 500)"
+          "maxPages": {
+            "description": "Maximum pages to extract (default: 20)",
+            "type": "number"
           }
         },
-        "required": ["output_path", "format"]
+        "required": [
+          "filePath"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "extract_text_from_image",
+      "description": "Perform Optical Character Recognition (OCR) to extract embedded text, diagrams, receipts, or error logs from image files (.png, .jpg, .jpeg, .webp).",
+      "inputSchema": {
+        "properties": {
+          "filePath": {
+            "description": "Path to image file",
+            "type": "string"
+          },
+          "language": {
+            "description": "OCR language code (default: 'eng')",
+            "type": "string"
+          }
+        },
+        "required": [
+          "filePath"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "parse_csv",
+      "description": "Parse a CSV/TSV file, apply filters, select columns, paginate, or inspect schema without loading full file.",
+      "inputSchema": {
+        "properties": {
+          "filePath": {
+            "description": "Absolute or relative path to the CSV/TSV file",
+            "type": "string"
+          },
+          "filters": {
+            "description": "Optional key-value filters to match rows (e.g. { 'Status': 'Active' })",
+            "type": "object"
+          },
+          "limit": {
+            "description": "Max rows to return (default 100)",
+            "type": "number"
+          },
+          "offset": {
+            "description": "Row offset for pagination (default 0)",
+            "type": "number"
+          },
+          "schema_only": {
+            "description": "If true, only returns column headers and total count without data rows",
+            "type": "boolean"
+          },
+          "selectColumns": {
+            "description": "Optional list of columns to include",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          }
+        },
+        "required": [
+          "filePath"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "parse_excel",
+      "description": "Inspect worksheets and parse tabular rows from Excel (.xlsx, .xls) workbooks.",
+      "inputSchema": {
+        "properties": {
+          "cellRange": {
+            "description": "Optional cell range to extract (e.g. 'A1:F50')",
+            "type": "string"
+          },
+          "filePath": {
+            "description": "Path to Excel file (.xlsx, .xls)",
+            "type": "string"
+          },
+          "headerRow": {
+            "description": "1-indexed row number containing column headers (default: 1)",
+            "type": "number"
+          },
+          "limit": {
+            "description": "Max rows to return (default: 100)",
+            "type": "number"
+          },
+          "offset": {
+            "description": "Row offset for pagination (default: 0)",
+            "type": "number"
+          },
+          "schema_only": {
+            "description": "If true, returns sheet names, column headers, and row count only",
+            "type": "boolean"
+          },
+          "sheetName": {
+            "description": "Target sheet name (default: first worksheet)",
+            "type": "string"
+          }
+        },
+        "required": [
+          "filePath"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "parse_log_file",
+      "description": "Analyze and filter server log files by severity (ERROR, WARN, INFO), timestamps, and keywords.",
+      "inputSchema": {
+        "properties": {
+          "filePath": {
+            "description": "Path to log file",
+            "type": "string"
+          },
+          "keywords": {
+            "description": "Keywords to match",
+            "items": {
+              "type": "string"
+            },
+            "type": "array"
+          },
+          "limit": {
+            "description": "Max lines to return (default 150)",
+            "type": "number"
+          },
+          "severity": {
+            "description": "Severity filter (e.g. ERROR, WARN, CRITICAL)",
+            "type": "string"
+          }
+        },
+        "required": [
+          "filePath"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "read_html_content",
+      "description": "Extract clean text and markdown from HTML files, stripping scripts, navigation, and styles.",
+      "inputSchema": {
+        "properties": {
+          "filePath": {
+            "description": "Path to local HTML file",
+            "type": "string"
+          }
+        },
+        "required": [
+          "filePath"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "read_powerpoint_presentation",
+      "description": "Extract slide-by-slide text, titles, cards, and speaker notes from a PowerPoint presentation (.pptx).",
+      "inputSchema": {
+        "properties": {
+          "filePath": {
+            "description": "Path to .pptx file",
+            "type": "string"
+          }
+        },
+        "required": [
+          "filePath"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "read_text_file",
+      "description": "Read plaintext, markdown, JSON, or code files with line limits and encoding support.",
+      "inputSchema": {
+        "properties": {
+          "filePath": {
+            "description": "Path to text file",
+            "type": "string"
+          },
+          "maxLines": {
+            "description": "Max lines to read (default 500)",
+            "type": "number"
+          },
+          "offsetLines": {
+            "description": "Line offset to start from (default 0)",
+            "type": "number"
+          }
+        },
+        "required": [
+          "filePath"
+        ],
+        "type": "object"
+      }
+    },
+    {
+      "name": "read_word_document",
+      "description": "Extract structured text, headings, paragraphs, and tables from a Word document (.docx).",
+      "inputSchema": {
+        "properties": {
+          "asMarkdown": {
+            "description": "If true, converts to formatted Markdown (default: true)",
+            "type": "boolean"
+          },
+          "filePath": {
+            "description": "Path to .docx file",
+            "type": "string"
+          }
+        },
+        "required": [
+          "filePath"
+        ],
+        "type": "object"
       }
     }
   ]

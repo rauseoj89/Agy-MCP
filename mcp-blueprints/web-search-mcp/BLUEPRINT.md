@@ -50,3 +50,7 @@ Deploy using node:
 }
 ```
 Verify by running `search_web` with query "mcp specification".
+
+---
+**Author:** JimmyR  
+**Powered by:** AntigravityAI

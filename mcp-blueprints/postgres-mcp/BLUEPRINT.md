@@ -71,3 +71,7 @@ Add to `.clinerules` / `.roo-code-instructions` or the global MCP settings:
 - Generar el código SQL exacto y pedir al usuario que pegue los resultados obtenidos.
 
 Verify installation by calling `list_databases` or `list_tables`.
+
+---
+**Author:** JimmyR  
+**Powered by:** AntigravityAI

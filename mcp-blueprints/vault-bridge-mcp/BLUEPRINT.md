@@ -69,3 +69,7 @@ Add to the user's active configuration file:
 - Indique al desarrollador que inyecte las variables en su entorno local de desarrollo.
 
 Verify operation by calling `list_secrets` on a non-production path.
+
+---
+**Author:** JimmyR  
+**Powered by:** AntigravityAI

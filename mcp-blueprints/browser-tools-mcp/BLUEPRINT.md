@@ -51,3 +51,7 @@ Deploy the MCP using the npx command:
 }
 ```
 Verify the connection using `list_pages` to confirm the browser is reachable.
+
+---
+**Author:** JimmyR  
+**Powered by:** AntigravityAI
