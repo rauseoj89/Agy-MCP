@@ -12,8 +12,10 @@
 
 1. **System Statistics (`get_system_stats`)**: Retrieves real-time CPU, RAM, disk, and ZFS temperature stats.
 2. **Docker Orchestration (`docker_ps`, `docker_logs`, `docker_inspect`, `docker_control`)**: Lists, stops, starts, or inspects Docker containers.
-3. **ZFS Storage (`zfs_get_pools`)**: Views health and configurations of ZFS storage pools.
-4. **Shell Control (`execute_shell_command`, `check_permissions`)**: Run managed commands securely on targeted hubs.
+3. **Docker Compose v2 & BuildKit Support (`docker_compose`, `docker_build`)** *(Enhanced)*: Runs validated `docker compose` operations against canonical `compose.yaml` files and initiates BuildKit builds with cache mounts.
+4. **Volume & Resource Governance (`docker_volume_inspect`, `docker_prune`)** *(Enhanced)*: Inspects named volumes and executes scoped, gated cleanup with mandatory Tier-3 safety approvals.
+5. **ZFS Storage (`zfs_get_pools`)**: Views health and configurations of ZFS storage pools.
+6. **Shell Control (`execute_shell_command`, `check_permissions`)**: Run managed commands securely on targeted hubs.
 
 ---
 

@@ -49,6 +49,10 @@ Agy-MCP/
 │   │   ├── BLUEPRINT.md
 │   │   └── schemas/tools.json
 │   │
+│   ├── security-scanner-mcp/  # Host OS hardening, socket audit, CVE checks & finding validation
+│   │   ├── BLUEPRINT.md
+│   │   └── schemas/tools.json
+│   │
 │   ├── terminal-mcp/          # Validated subprocess shell command executor
 │   │   ├── BLUEPRINT.md
 │   │   └── schemas/tools.json
@@ -76,10 +80,11 @@ Agy-MCP/
 | **`filesystem-mcp`** | Node.js / npx | 6 | Sandboxed local filesystem operations (read, write, list, search, move) |
 | **`git-mcp`** | Node.js / npx | 7 | Conventional-commit gated git status, branch, log, diff, commit, and push |
 | **`markitdown-mcp`** | Python 3.12 | 1 | Multi-format document to Markdown conversion (PDF, Office, HTML, Audio) |
-| **`nas-tools`** | Node.js | 8 | Hardware statistics, ZFS pool monitoring, Docker container controls, and shell checks |
+| **`nas-tools`** | Node.js | 8 | Hardware statistics, ZFS pool monitoring, Docker container controls, Compose v2, and shell checks |
 | **`office-mcp`** | Node.js | 5 | Styled Word (.docx), Excel (.xlsx), PowerPoint (.pptx), PDF (.pdf) generation & OOXML inspection |
 | **`postgres-mcp`** | Node.js | 4 | Secure PostgreSQL schema exploration, table inspection, and parameterized queries |
 | **`searxng-mcp`** | Node.js | 1 | Privacy-respecting web search via local or network SearXNG instance |
+| **`security-scanner-mcp`** | Python / Node | 4 | Host OS auditing, open listening socket scans, CVE audits, and finding schema validations |
 | **`terminal-mcp`** | Node.js | 2 | Sandboxed subprocess command execution with timeout and output guards |
 | **`vault-bridge-mcp`** | Node.js | 5 | HashiCorp Vault KV v2 credential storage, retrieval, rotation, and audit logs |
 | **`web-search-mcp`** | Node.js | 2 | Web search querying and structured citation extraction |

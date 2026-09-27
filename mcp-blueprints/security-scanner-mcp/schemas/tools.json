@@ -1,0 +1,80 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "security-scanner-mcp",
+  "description": "Tools for automated host security audits, listening port scans, dependency vulnerability checks, and finding schema validations.",
+  "tools": [
+    {
+      "name": "audit_host_security",
+      "description": "Audits Linux host OS security: SSH configuration, firewall status, and intrusion prevention service alignment.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "checks": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": ["ssh", "firewall", "fail2ban", "suid", "sudo"]
+            },
+            "description": "List of specific host checks to execute."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "audit_listening_ports",
+      "description": "Scans active listening network sockets and compares them against firewall allowlists.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "protocol": {
+            "type": "string",
+            "enum": ["tcp", "udp", "all"],
+            "default": "all",
+            "description": "Transport protocol to scan."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "validate_audit_findings",
+      "description": "Validates findings.json and coverage-ledger.json against the canonical Cloudflare security audit report schema.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "findings_path": {
+            "type": "string",
+            "description": "Absolute or relative path to the findings.json file."
+          },
+          "ledger_path": {
+            "type": "string",
+            "description": "Optional path to the coverage-ledger.json file."
+          }
+        },
+        "required": ["findings_path"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "scan_dependency_vulnerabilities",
+      "description": "Audits project dependency manifests (package.json, requirements.txt, go.mod) for CVEs.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "manifest_path": {
+            "type": "string",
+            "description": "Path to the dependency manifest or lockfile."
+          },
+          "ecosystem": {
+            "type": "string",
+            "enum": ["npm", "pypi", "golang", "composer"],
+            "description": "Package manager ecosystem."
+          }
+        },
+        "required": ["manifest_path", "ecosystem"],
+        "additionalProperties": false
+      }
+    }
+  ]
+}
