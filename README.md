@@ -99,5 +99,5 @@ Agy-MCP/
 4. **Atomic Write Strategy:** Write operations that mutate files must first write to a `.tmp` buffer file and atomically rename it to the target path.
 
 ---
-**Author:** JimmyR  
-**Powered by:** AntigravityAI
+**Created by:** Jimmy Rauseo  
+**Powered by:** Antigravity / Gemini
