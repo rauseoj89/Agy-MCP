@@ -38,7 +38,7 @@ VAULT_SECRET_ID=${VAULT_SECRET_ID}
 
 ## 6. Multi-Agent Deployment & Verification Plan
 
-### ▶️ Si estás en Antigravity / Hermes Agent:
+### ▶️ If you are on Antigravity / Hermes Agent:
 Configure in `mcp_config.json`:
 ```json
 {
@@ -51,7 +51,7 @@ Configure in `mcp_config.json`:
 }
 ```
 
-### ▶️ Si estás en Cline / Roo Code:
+### ▶️ If you are on Cline / Roo Code:
 Add to the user's active configuration file:
 ```json
 {
@@ -64,9 +64,9 @@ Add to the user's active configuration file:
 }
 ```
 
-### ⚠️ Si NO tienes soporte de MCP (Fallback):
-- Guíe al usuario para obtener o registrar secretos usando la CLI oficial de Vault (`vault kv get`).
-- Indique al desarrollador que inyecte las variables en su entorno local de desarrollo.
+### ⚠️ If you do NOT have MCP support (Fallback):
+- Guide the user to retrieve or store secrets using the official Vault CLI (`vault kv get`).
+- Instruct the developer to inject environment variables into their local development environment.
 
 Verify operation by calling `list_secrets` on a non-production path.
 

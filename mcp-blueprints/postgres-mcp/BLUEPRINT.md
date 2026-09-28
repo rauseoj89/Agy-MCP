@@ -40,7 +40,7 @@ DB_PASSWORD=${VAULT_SECRET_DB_PASSWORD}
 
 ## 6. Multi-Agent Deployment & Verification Plan
 
-### ▶️ Si estás en Antigravity / Hermes Agent:
+### ▶️ If you are on Antigravity / Hermes Agent:
 Configure this server in your agent's `mcp_config.json`:
 ```json
 {
@@ -53,7 +53,7 @@ Configure this server in your agent's `mcp_config.json`:
 }
 ```
 
-### ▶️ Si estás en Cline / Roo Code:
+### ▶️ If you are on Cline / Roo Code:
 Add to `.clinerules` / `.roo-code-instructions` or the global MCP settings:
 ```json
 {
@@ -66,9 +66,9 @@ Add to `.clinerules` / `.roo-code-instructions` or the global MCP settings:
 }
 ```
 
-### ⚠️ Si NO tienes soporte de MCP (Fallback):
-- Guíe al usuario para ejecutar consultas directas a la base de datos usando `psql` o un cliente gráfico.
-- Generar el código SQL exacto y pedir al usuario que pegue los resultados obtenidos.
+### ⚠️ If you do NOT have MCP support (Fallback):
+- Guide the user to execute direct database queries using `psql` or a database GUI client.
+- Generate the exact SQL query and request that the user paste the returned results.
 
 Verify installation by calling `list_databases` or `list_tables`.
 
