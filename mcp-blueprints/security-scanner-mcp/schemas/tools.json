@@ -5,12 +5,26 @@
   "tools": [
     {
       "name": "audit_host_security",
-      "description": "Audits Linux host OS security: SSH configuration, firewall status, and intrusion prevention service alignment.",
-      "parameters": {
+      "description": "Audits host OS security configurations (SSH daemon settings, firewall state, intrusion prevention).",
+      "inputSchema": {
         "type": "object",
         "properties": {
+          "target_host": {
+            "type": "string",
+            "maxLength": 253,
+            "pattern": "^[a-zA-Z0-9.-]+$",
+            "default": "localhost",
+            "description": "Target host to audit."
+          },
+          "scope": {
+            "type": "string",
+            "enum": ["ALLOWED_SCAN_SCOPES", "host", "container", "network"],
+            "default": "ALLOWED_SCAN_SCOPES",
+            "description": "Scan scope boundary."
+          },
           "checks": {
             "type": "array",
+            "maxItems": 10,
             "items": {
               "type": "string",
               "enum": ["ssh", "firewall", "fail2ban", "suid", "sudo"]
@@ -23,10 +37,17 @@
     },
     {
       "name": "audit_listening_ports",
-      "description": "Scans active listening network sockets and compares them against firewall allowlists.",
-      "parameters": {
+      "description": "Scans active listening network sockets and correlates them against firewall allowlists.",
+      "inputSchema": {
         "type": "object",
         "properties": {
+          "target_host": {
+            "type": "string",
+            "maxLength": 253,
+            "pattern": "^[a-zA-Z0-9.-]+$",
+            "default": "localhost",
+            "description": "Host target for listening socket inspection."
+          },
           "protocol": {
             "type": "string",
             "enum": ["tcp", "udp", "all"],
@@ -40,15 +61,19 @@
     {
       "name": "validate_audit_findings",
       "description": "Validates findings.json and coverage-ledger.json against the canonical Cloudflare security audit report schema.",
-      "parameters": {
+      "inputSchema": {
         "type": "object",
         "properties": {
           "findings_path": {
             "type": "string",
-            "description": "Absolute or relative path to the findings.json file."
+            "maxLength": 512,
+            "pattern": "^[a-zA-Z0-9_./\\\\-]+$",
+            "description": "Workspace-relative or absolute path to the findings.json file."
           },
           "ledger_path": {
             "type": "string",
+            "maxLength": 512,
+            "pattern": "^[a-zA-Z0-9_./\\\\-]+$",
             "description": "Optional path to the coverage-ledger.json file."
           }
         },
@@ -59,12 +84,14 @@
     {
       "name": "scan_dependency_vulnerabilities",
       "description": "Audits project dependency manifests (package.json, requirements.txt, go.mod) for CVEs.",
-      "parameters": {
+      "inputSchema": {
         "type": "object",
         "properties": {
           "manifest_path": {
             "type": "string",
-            "description": "Path to the dependency manifest or lockfile."
+            "maxLength": 512,
+            "pattern": "^[a-zA-Z0-9_./\\\\-]+$",
+            "description": "Workspace-relative path to the dependency manifest or lockfile."
           },
           "ecosystem": {
             "type": "string",

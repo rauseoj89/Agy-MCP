@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "backup-mcp",
+  "description": "Read-only tools for inspecting backup infrastructure freshness, job completion status, and recovery points.",
+  "tools": [
+    {
+      "name": "get_backup_status",
+      "description": "Retrieves the latest execution status and RPO freshness for a given backup job or protected host.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "target_name": {
+            "type": "string",
+            "maxLength": 100,
+            "description": "Name of the VM, database, or server to verify backup status for."
+          }
+        },
+        "required": ["target_name"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "list_backup_jobs",
+      "description": "Lists all configured backup jobs and their last run results (Success, Warning, Failed).",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "status_filter": {
+            "type": "string",
+            "enum": ["all", "failed", "warning", "success"],
+            "default": "all",
+            "description": "Optional filter by execution status."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "get_job_history",
+      "description": "Retrieves historical execution logs and durations for a specific backup job.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "job_name": {
+            "type": "string",
+            "maxLength": 100,
+            "description": "Identifier or name of the backup job."
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 30,
+            "default": 7,
+            "description": "Number of recent historical runs to return."
+          }
+        },
+        "required": ["job_name"],
+        "additionalProperties": false
+      }
+    }
+  ]
+}

@@ -10,42 +10,45 @@ graph TD
     MCP -->|HTTP GET /search| SearXNG[(SearXNG Engine - ${SEARXNG_URL})]
 ```
 
-## 2. Setup & Installation
+## 2. Setup Requirements
 
 - **Runtime:** Node.js >= 18 (ES Modules)
 - **Dependencies:** `@modelcontextprotocol/sdk`, `axios`, `zod`
+- SearXNG must have JSON format enabled in its `/etc/searxng/settings.yml`:
+  ```yaml
+  search:
+    formats:
+      - html
+      - json
+  ```
 
-```bash
-cd /path/to/searxng-mcp
-npm install
-```
+## 3. Environment Configuration (`.env.example`)
 
-## 3. Server Requirement & Environment Configuration (`.env`)
-
-SearXNG must have JSON format enabled in its `/etc/searxng/settings.yml`:
-```yaml
-search:
-  formats:
-    - html
-    - json
-```
-
-Environment file (`.env`):
 ```env
 # URL pointing to local or network SearXNG instance
 SEARXNG_URL=http://localhost:8080
 ```
 
-## 4. Client Manifest Example
+## 4. Least Privilege Design
 
+- **Read-Only Protocol:** Only exposes read-only search operations (`HTTP GET /search`).
+- **Internal Network Scoping:** SearXNG instance should be bound to `localhost` or private internal network interfaces.
+- **Input Bounds:** Search queries are limited to 500 characters; pagination is strictly validated.
+
+## 5. Atomic Write Strategy
+
+- Search results are streamed directly as structured JSON to the agent session; no disk persistence is performed.
+
+## 6. Multi-Agent Deployment & Verification Plan
+
+### ▶️ If you are on Antigravity / Hermes Agent:
+Configure in `mcp_config.json`:
 ```json
 {
   "mcpServers": {
     "searxng": {
       "command": "node",
-      "args": [
-        "/path/to/searxng-mcp/index.js"
-      ],
+      "args": ["./mcps/searxng/index.js"],
       "env": {
         "SEARXNG_URL": "http://localhost:8080"
       }
@@ -54,11 +57,26 @@ SEARXNG_URL=http://localhost:8080
 }
 ```
 
-## 5. Tool Inventory
+### ▶️ If you are on Cline / Roo Code / OpenCode:
+```json
+{
+  "mcpServers": {
+    "searxng": {
+      "command": "node",
+      "args": ["./mcps/searxng/index.js"],
+      "env": {
+        "SEARXNG_URL": "http://localhost:8080"
+      }
+    }
+  }
+}
+```
 
-- **`web_search`**: Accepts a search `query`, optional `categories` (general, IT, science, news), and `pageno` for pagination.
+### ⚠️ If you do NOT have MCP support (Fallback):
+- Query SearXNG directly via browser or `curl -s "${SEARXNG_URL}/search?q=<query>&format=json"`.
+
+Verify installation by calling `web_search` with query `"test"`.
 
 ---
 **Author:** JimmyR  
 **Powered by:** AntigravityAI
-

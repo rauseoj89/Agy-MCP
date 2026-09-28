@@ -1,34 +1,20 @@
 {
   "tools": [
     {
-      "name": "convert_local_file",
-      "description": "Convert a local file (PDF, DOCX, XLSX, etc.) to Markdown.",
+      "name": "convert_to_markdown",
+      "description": "Convert a document (PDF, Word, Excel, PowerPoint, Audio, HTML) to Markdown text.",
       "inputSchema": {
         "type": "object",
         "properties": {
-          "path": {
-            "type": "string",
-            "maxLength": 1000,
-            "description": "Absolute path to the local file to convert"
-          }
-        },
-        "required": ["path"]
-      }
-    },
-    {
-      "name": "convert_remote_url",
-      "description": "Fetch a remote document or webpage via HTTP/HTTPS and convert to Markdown.",
-      "inputSchema": {
-        "type": "object",
-        "properties": {
-          "url": {
+          "uri": {
             "type": "string",
             "maxLength": 2048,
-            "pattern": "^https?://",
-            "description": "Remote URL to fetch and convert"
+            "pattern": "^(https?|file|data):",
+            "description": "Target URI to convert (supports file://, https://, or data: schemes)."
           }
         },
-        "required": ["url"]
+        "required": ["uri"],
+        "additionalProperties": false
       }
     }
   ]

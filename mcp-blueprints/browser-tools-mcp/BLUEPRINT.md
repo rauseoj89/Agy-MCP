@@ -16,7 +16,7 @@ graph TD
 
 - **Runtime:** Node.js >= 18
 - **Browser:** Google Chrome or Chromium installed on the host.
-- **Port:** Port 9222 must be free for remote debugging.
+- **Port:** Port 9222 must be free for remote debugging (or launch isolated profile via CLI flag).
 
 ## 3. Environment Configuration (`.env.example`)
 
@@ -24,33 +24,51 @@ Create a `.env` file from this template. No credentials should be hardcoded:
 ```env
 # 🌐 BROWSER PORT CONFIG
 BROWSER_PORT=9222
-BROWSER_HOST=${TARGET_HOST}
+BROWSER_HOST=localhost
 ```
 
 ## 4. Least Privilege Design
 
-- The browser instance is launched with isolated user data profile (`--user-data-dir`).
-- The MCP server only exposes browser interactions and navigation, not direct shell access.
-- Restrict remote debugging to localhost or specific internal proxy IP ranges.
+- The browser instance is launched with an isolated user data profile (`--isolated`), using a throwaway profile to prevent cookie or credential leaks.
+- The MCP server only exposes browser interactions and navigation, not direct host shell access.
+- Remote debugging binds exclusively to `localhost`.
 
 ## 5. Atomic Write Strategy
 
-- When capturing screenshots, they are written to a `.tmp` file and renamed to the target filename to prevent corruption.
+- When capturing screenshots, data is written to a `.tmp` file and atomically renamed to the target filename to prevent corruption.
 
-## 6. Deployment / Verification Plan
+## 6. Multi-Agent Deployment & Verification Plan
 
-Deploy the MCP using the npx command:
+### ▶️ If you are on Antigravity / Hermes Agent:
+Deploy the MCP using the official Chrome DevTools package:
 ```json
 {
   "mcpServers": {
     "browser-tools": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-devtools", "--port", "9222"]
+      "args": ["-y", "chrome-devtools-mcp@latest", "--isolated"]
     }
   }
 }
 ```
-Verify the connection using `list_pages` to confirm the browser is reachable.
+
+### ▶️ If you are on Cline / Roo Code / OpenCode:
+```json
+{
+  "mcpServers": {
+    "browser-tools": {
+      "command": "npx",
+      "args": ["-y", "chrome-devtools-mcp@latest", "--isolated"]
+    }
+  }
+}
+```
+
+### ⚠️ If you do NOT have MCP support (Fallback):
+- Use built-in browser automation tools (such as Antigravity's native browser tools).
+- For headless execution, run Playwright/Puppeteer CLI test scripts.
+
+Verify the connection by calling `new_page` then `take_snapshot` to confirm DOM rendering.
 
 ---
 **Author:** JimmyR  

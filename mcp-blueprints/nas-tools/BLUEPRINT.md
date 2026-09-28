@@ -1,37 +1,27 @@
-# NAS-Tools Blueprint 🛠️
+# NAS-Tools Blueprint 🛠️ [RETIRED]
 
-`nas-tools` is an MCP server designed for system diagnostics, Docker orchestration, and ZFS pool management on a custom home storage server.
+> [!CAUTION]
+> **BLUEPRINT RETIRED (2026-09-28)**  
+> The `nas-tools` custom MCP server has been formally **RETIRED**. There is no dedicated NAS appliance in this development environment. All system operations, container monitoring, and Docker orchestration previously handled by `nas-tools` must now be executed using **native Docker CLI** commands (`docker ps`, `docker inspect`, `docker stats`, `docker compose`) or **Windows PowerShell cmdlets** (`Get-PSDrive`, `Get-Process`). All skills have been refactored away from `nas-tools`.
 
 ## 📁 Structure
 
-* **`BLUEPRINT.md`**: This architectural manual.
-* **`schemas/`**: JSON tool files for registration.
-* **`templates/`**: Setup variables and secure config examples.
+* **`BLUEPRINT.md`**: Architectural archive.
+* **`schemas/`**: *Pending / Deprecated*
+* **`templates/`**: *Pending / Deprecated*
 
-## 🚀 Capabilities
+## 📜 Historical Capabilities (Now Migrated to Native Tooling)
 
-1. **System Statistics (`get_system_stats`)**: Retrieves real-time CPU, RAM, disk, and ZFS temperature stats.
-2. **Docker Orchestration (`docker_ps`, `docker_logs`, `docker_inspect`, `docker_control`)**: Lists, stops, starts, or inspects Docker containers.
-3. **Docker Compose v2 & BuildKit Support (`docker_compose`, `docker_build`)** *(Enhanced)*: Runs validated `docker compose` operations against canonical `compose.yaml` files and initiates BuildKit builds with cache mounts.
-4. **Volume & Resource Governance (`docker_volume_inspect`, `docker_prune`)** *(Enhanced)*: Inspects named volumes and executes scoped, gated cleanup with mandatory Tier-3 safety approvals.
-5. **ZFS Storage (`zfs_get_pools`)**: Views health and configurations of ZFS storage pools.
-6. **Shell Control (`execute_shell_command`, `check_permissions`)**: Run managed commands securely on targeted hubs.
-
----
-
-## 🔒 Security & Deployment Configuration
-
-### `.env` Structure
-Store the environment settings in a local, uncommitted `.env` file pointing to your TrueNAS SSH credentials:
-```bash
-# 🛡️ SYSTEM SECURITY (SSH-Powered)
-REMOTE_HOST=${REMOTE_USER}@${REMOTE_IP}
-SSH_KEY_PATH=${SSH_KEY_PATH}
-
-# 🛠️ CORE CONFIGURATION
-NAS_ROOT_PATH=${NAS_ROOT_PATH}
-MANAGED_HUBS=Infrastructure,Workspaces,Shared
-```
+| Historical Tool | Native Replacement Tooling |
+| :--- | :--- |
+| `get_system_stats` | Native PowerShell: `Get-PSDrive`, `Get-Counter`, or POSIX: `df -h`, `top` |
+| `docker_ps` | Native CLI: `docker ps --format json` |
+| `docker_logs` | Native CLI: `docker logs --tail 100 <container>` |
+| `docker_inspect` | Native CLI: `docker inspect <container>` |
+| `docker_control` | Native CLI: `docker start|stop|restart <container>` |
+| `docker_compose` | Native CLI: `docker compose -f compose.yaml up -d` |
+| `zfs_get_pools` | ZFS CLI (if available): `zpool status -x` |
+| `check_permissions` | PowerShell: `Get-Acl <path>` / POSIX: `ls -ld <path>` |
 
 ---
 **Author:** JimmyR  

@@ -1,22 +1,25 @@
 # Agy-MCP Blueprint: Web Search MCP 🌐
 
-This MCP server provides search engine queries and web content fetching capabilities with strict HTTPS constraints and length validation.
+This MCP server provides web search querying and citation extraction capabilities with strict HTTPS constraints, character caps, and rate limits.
+
+> [!NOTE]
+> **Implementation Mapping:** The maintained upstream server is `@brave/brave-search-mcp-server`, exposing `brave_web_search`. For document or web page fetching, pair this server with `markitdown-mcp` (`convert_to_markdown`) or local SearXNG.
 
 ## 1. Architectural Overview
 
-The Web Search MCP queries public search providers (like Brave, DuckDuckGo) or scrapes web pages, parsing the response to Markdown.
+The Web Search MCP queries public search providers (such as Brave Search or SearXNG) and returns formatted search results with citations.
 
 ```mermaid
 graph TD
     Agent([Agent / Client]) -->|JSON RPC| MCP[Web Search MCP]
-    MCP -->|HTTPS Request| Search[Brave / DuckDuckGo APIs]
-    MCP -->|HTTPS Fetch| Web[(Remote Web Pages)]
+    MCP -->|HTTPS Request| Search[Brave Search API / SearXNG]
+    Search -->|Results| MCP
 ```
 
 ## 2. Setup Requirements
 
-- **Runtime:** Node.js >= 18 or Python >= 3.10
-- **API Keys:** Brave API key (optional for search) or standard HTTP scraping headers.
+- **Runtime:** Node.js >= 18
+- **API Keys:** Brave API key (configured in Vault) or access to a SearXNG instance.
 
 ## 3. Environment Configuration (`.env.example`)
 
@@ -28,28 +31,52 @@ BRAVE_API_KEY=${VAULT_SECRET_BRAVE_API_KEY}
 
 ## 4. Least Privilege Design
 
-- **HTTPS Enforcement:** Fetching URLs is strictly restricted to HTTPS protocol schemes to prevent cleartext credential leakage or MITM attacks.
 - **Query Length Cap:** Search query parameter length is limited to 500 characters.
-- **Results Bounds:** Results collection size is capped at 10 items to prevent network/memory buffer overflows.
+- **Results Bounds:** Results collection size is capped at 10 items to prevent context window saturation.
+- **HTTPS Enforcement:** All outbound requests strictly require HTTPS.
 
 ## 5. Atomic Write Strategy
 
 - Content fetched is returned directly to the agent session as text JSON, avoiding local storage writes.
 
-## 6. Deployment / Verification Plan
+## 6. Multi-Agent Deployment & Verification Plan
 
-Deploy using node:
+### ▶️ If you are on Antigravity / Hermes Agent:
+Deploy using the verified Brave Search package:
 ```json
 {
   "mcpServers": {
     "web-search": {
       "command": "npx",
-      "args": ["-y", "@modelcontextprotocol/server-web-search"]
+      "args": ["-y", "@brave/brave-search-mcp-server"],
+      "env": {
+        "BRAVE_API_KEY": "${VAULT_SECRET_BRAVE_API_KEY}"
+      }
     }
   }
 }
 ```
-Verify by running `search_web` with query "mcp specification".
+
+### ▶️ If you are on Cline / Roo Code / OpenCode:
+```json
+{
+  "mcpServers": {
+    "web-search": {
+      "command": "npx",
+      "args": ["-y", "@brave/brave-search-mcp-server"],
+      "env": {
+        "BRAVE_API_KEY": "${VAULT_SECRET_BRAVE_API_KEY}"
+      }
+    }
+  }
+}
+```
+
+### ⚠️ If you do NOT have MCP support (Fallback):
+- Use built-in web search capabilities (e.g. Antigravity's `search_web`).
+- Guide the user to perform the search manually and share relevant documentation snippets.
+
+Verify by running `brave_web_search` with query "model context protocol".
 
 ---
 **Author:** JimmyR  

@@ -13,7 +13,15 @@ All MCP server blueprints are located under `mcp-blueprints/`, categorized by se
 ```
 Agy-MCP/
 ├── mcp-blueprints/
+│   ├── backup-mcp/            # Read-only backup infrastructure freshness & job status
+│   │   ├── BLUEPRINT.md
+│   │   └── schemas/tools.json
+│   │
 │   ├── browser-tools-mcp/     # Browser automation, visual validation & Lighthouse audits
+│   │   ├── BLUEPRINT.md
+│   │   └── schemas/tools.json
+│   │
+│   ├── connectwise-mcp/       # ConnectWise PSA tickets & RMM endpoint monitoring
 │   │   ├── BLUEPRINT.md
 │   │   └── schemas/tools.json
 │   │
@@ -21,7 +29,7 @@ Agy-MCP/
 │   │   ├── BLUEPRINT.md
 │   │   └── schemas/tools.json
 │   │
-│   ├── filesystem-mcp/        # Sandboxed local filesystem read, write, list and search
+│   ├── filesystem-mcp/        # Sandboxed local filesystem read, write, list, move and search
 │   │   ├── BLUEPRINT.md
 │   │   └── schemas/tools.json
 │   │
@@ -33,9 +41,8 @@ Agy-MCP/
 │   │   ├── BLUEPRINT.md
 │   │   └── schemas/tools.json
 │   │
-│   ├── nas-tools/             # Blueprint for NAS systems, ZFS, and container automation
-│   │   ├── BLUEPRINT.md
-│   │   └── templates/
+│   ├── nas-tools/             # [RETIRED] Migrated to native Docker CLI and PowerShell
+│   │   └── BLUEPRINT.md
 │   │
 │   ├── office-mcp/            # 5-tool Office Authoring (Word, Excel, PowerPoint, PDF)
 │   │   ├── BLUEPRINT.md
@@ -75,19 +82,41 @@ Agy-MCP/
 
 | Blueprint Server | Runtime | Tools Count | Primary Scope & Capabilities |
 | :--- | :--- | :---: | :--- |
-| **`browser-tools-mcp`** | Node.js | 4 | Browser automation, visual regressions, DOM inspection, and Lighthouse audits |
-| **`data-analyst-mcp`** | Node.js | 11 | Multi-format ingestion (CSV, Excel, PDF, Word, PPTX, HTML, Logs), data hygiene, stats metrics, and image OCR |
-| **`filesystem-mcp`** | Node.js / npx | 6 | Sandboxed local filesystem operations (read, write, list, search, move) |
-| **`git-mcp`** | Node.js / npx | 7 | Conventional-commit gated git status, branch, log, diff, commit, and push |
-| **`markitdown-mcp`** | Python 3.12 | 1 | Multi-format document to Markdown conversion (PDF, Office, HTML, Audio) |
-| **`nas-tools`** | Node.js | 8 | Hardware statistics, ZFS pool monitoring, Docker container controls, Compose v2, and shell checks |
+| **`backup-mcp`** | Node.js / Python | 3 | Read-only backup appliance freshness, job status verification (Veeam/Axcient), and history logs |
+| **`browser-tools-mcp`** | Node.js / npx | 19 | Browser automation, visual regressions, DOM inspection, and Lighthouse audits |
+| **`connectwise-mcp`** | Node.js / Python | 5 | ConnectWise Manage PSA ticket management, company configuration discovery, and RMM endpoint monitoring |
+| **`data-analyst-mcp`** | Node.js | 11 | Multi-format ingestion (CSV, Excel, PDF, Word, PPTX, HTML, Logs), data hygiene, stats metrics, and OCR |
+| **`filesystem-mcp`** | Node.js / npx | 9 | Sandboxed local filesystem operations (read, write, list, search, move, get file info) |
+| **`git-mcp`** | Python / uvx | 7 | Conventional-commit gated git status, branch, log, diff, commit, and status inspection |
+| **`markitdown-mcp`** | Python >= 3.10 | 1 | Multi-format document to Markdown conversion (`convert_to_markdown`) |
+| **`nas-tools`** | *RETIRED* | 0 | Retired 2026-09-28. Replaced with native Docker CLI and Windows PowerShell |
 | **`office-mcp`** | Node.js | 5 | Styled Word (.docx), Excel (.xlsx), PowerPoint (.pptx), PDF (.pdf) generation & OOXML inspection |
-| **`postgres-mcp`** | Node.js | 4 | Secure PostgreSQL schema exploration, table inspection, and parameterized queries |
+| **`postgres-mcp`** | Python uvx / Node | 6 | Secure PostgreSQL schema exploration, table inspection, explain plans, and parameterized queries |
 | **`searxng-mcp`** | Node.js | 1 | Privacy-respecting web search via local or network SearXNG instance |
 | **`security-scanner-mcp`** | Python / Node | 4 | Host OS auditing, open listening socket scans, CVE audits, and finding schema validations |
-| **`terminal-mcp`** | Node.js | 2 | Sandboxed subprocess command execution with timeout and output guards |
+| **`terminal-mcp`** | Node.js | 4 | Sandboxed subprocess command execution with timeout and output guards |
 | **`vault-bridge-mcp`** | Node.js | 5 | HashiCorp Vault KV v2 credential storage, retrieval, rotation, and audit logs |
-| **`web-search-mcp`** | Node.js | 2 | Web search querying and structured citation extraction |
+| **`web-search-mcp`** | Node.js / npx | 2 | Web search querying and structured citation extraction (Brave Search / SearXNG) |
+
+---
+
+## 🗺️ Skill-to-MCP Dependency Mapping
+
+| Agy-Skill | Primary MCP Servers Used | Fallback When MCP Unavailable |
+| :--- | :--- | :--- |
+| `browser_testing` | `browser-tools-mcp` | Native browser automation / Playwright CLI |
+| `database_management` (`db-manager`) | `postgres-mcp` | `psql` / database CLI / GUI client |
+| `managing_secrets_and_vaults` | `vault-bridge-mcp` | Environment variables / CLI vault commands |
+| `sec_engineer` | `browser-tools-mcp`, `security-scanner-mcp` | Native `docker inspect`, `curl -I`, `safety check` |
+| `host_security_audit` | `security-scanner-mcp` | Native Linux/Windows CLI (`netstat`, `ss`, `auditd`) |
+| `security_audit` | `security-scanner-mcp` | Manual dependency scans (`npm audit`, `trivy`) |
+| `general_network_audit` | `security-scanner-mcp` | Native `netstat -ano`, PowerShell `Test-NetConnection` |
+| `seo_audit` | `web-search-mcp`, `markitdown-mcp`, `browser-tools-mcp` | Native web fetch / Google PageSpeed web UI |
+| `client_onboarding` | `connectwise-mcp`, `vault-bridge-mcp` | ConnectWise web portal / PowerShell Graph |
+| `patch_management` | `connectwise-mcp`, `backup-mcp`, `terminal-mcp` | Vendor RMM portal / manual script deployment |
+| `incident_response` | `connectwise-mcp`, `data-analyst-mcp`, `vault-bridge-mcp` | PowerShell Microsoft Graph / manual incident triage |
+| `managing_system_operations` | `filesystem-mcp` | Native PowerShell (`Get-PSDrive`), POSIX (`df -h`) |
+| `documenting_sessions` (`docum-md`) | `filesystem-mcp`, `git-mcp` | Native file writes, `attrib +h`, `icacls` |
 
 ---
 
@@ -95,8 +124,9 @@ Agy-MCP/
 
 1. **Zero Raw Secrets:** Never commit real tokens, keys, passwords, or raw environment config files. Always use placeholders (`${VAULT_SECRET_<NAME>}`) and point to a secure secrets manager.
 2. **Input Validation Schemas:** Every blueprint must contain a `schemas/tools.json` file defining strict parameters, types, `maxLength`, pattern regex, `minimum`/`maximum`, and array bounds (`maxItems`) to reject malformed inputs at the protocol layer.
-3. **Least Privilege Design:** Any blueprint utilizing system credentials should restrict access to designated namespaces (e.g. `dev`, `staging`, `production`) and limit actions (e.g., read-only by default for SQL databases, no force pushes for git).
-4. **Atomic Write Strategy:** Write operations that mutate files must first write to a `.tmp` buffer file and atomically rename it to the target path.
+3. **Verified Packages Only:** Every external package in a deployment snippet must exist on npm or PyPI, must not be deprecated, and must not resolve to a security placeholder (`0.0.1-security`).
+4. **Least Privilege Design:** Any blueprint utilizing system credentials should restrict access to designated namespaces (e.g. `dev`, `staging`, `production`) and limit actions (e.g., read-only by default for SQL databases, no force pushes for git).
+5. **Atomic Write Strategy:** Write operations that mutate files must first write to a `.tmp` buffer file and atomically rename it to the target path.
 
 ---
 **Created by:** Jimmy Rauseo  

@@ -1,0 +1,115 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "name": "connectwise-mcp",
+  "description": "Tools for interacting with ConnectWise PSA service tickets, client companies, and RMM managed endpoints.",
+  "tools": [
+    {
+      "name": "cw_get_ticket",
+      "description": "Retrieves details of a specific ConnectWise PSA service ticket.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "ticket_id": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "ConnectWise service ticket ID."
+          }
+        },
+        "required": ["ticket_id"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "cw_list_tickets",
+      "description": "Lists recent service tickets with optional filtering by status or company.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "company_id": {
+            "type": "string",
+            "maxLength": 50,
+            "description": "Optional company identifier filter."
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 50,
+            "description": "Optional status filter (e.g., 'New', 'In Progress')."
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50,
+            "default": 10,
+            "description": "Maximum number of tickets to return."
+          }
+        },
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "cw_update_ticket",
+      "description": "Appends an internal note or updates status on an existing service ticket.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "ticket_id": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "ConnectWise service ticket ID."
+          },
+          "note": {
+            "type": "string",
+            "maxLength": 4000,
+            "description": "Internal discussion or resolution note to append."
+          },
+          "status": {
+            "type": "string",
+            "maxLength": 50,
+            "description": "Optional updated status name."
+          }
+        },
+        "required": ["ticket_id"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "cw_get_company_configuration",
+      "description": "Fetches managed configurations, assets, and network details for a client company.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "company_id": {
+            "type": "string",
+            "maxLength": 50,
+            "description": "Client company identifier."
+          }
+        },
+        "required": ["company_id"],
+        "additionalProperties": false
+      }
+    },
+    {
+      "name": "cw_list_endpoints",
+      "description": "Lists managed RMM endpoints and health status for an organization.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "company_id": {
+            "type": "string",
+            "maxLength": 50,
+            "description": "Client company identifier."
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 25,
+            "description": "Maximum number of endpoints to return."
+          }
+        },
+        "required": ["company_id"],
+        "additionalProperties": false
+      }
+    }
+  ]
+}

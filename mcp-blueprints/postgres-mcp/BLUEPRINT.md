@@ -2,19 +2,23 @@
 
 This MCP server provides a secure PostgreSQL connector, exposing schema discovery, query execution (read-only by default), query planning (EXPLAIN), and table definition lookups.
 
+> [!WARNING]
+> **Supply-Chain Security Alert (2026-09-28):**
+> Do NOT use the legacy npm package `mcp-server-postgres`. On npm, that package was withdrawn and resolved to a `0.0.1-security` placeholder. Always use the verified PyPI distribution (`postgres-mcp`) or a custom in-house Node.js wrapper implementing this blueprint's schema.
+
 ## 1. Architectural Overview
 
 The Postgres MCP routes query requests from the agent to a database host.
 
 ```mermaid
 graph TD
-    Agent([Agent / Client]) -->|JSON RPC| MCP[Postgres MCP]
+    Agent([Agent / Client]) -->|JSON RPC| MCP[Postgres MCP Server]
     MCP -->|TCP Connection| DB[(PostgreSQL Database)]
 ```
 
 ## 2. Setup Requirements
 
-- **Runtime:** Node.js >= 18
+- **Runtime:** Python >= 3.11 with `uv` / `uvx` OR Node.js >= 18 for custom wrapper.
 - **Database:** PostgreSQL >= 12 reachable on the network.
 
 ## 3. Environment Configuration (`.env.example`)
@@ -31,8 +35,9 @@ DB_PASSWORD=${VAULT_SECRET_DB_PASSWORD}
 
 ## 4. Least Privilege Design
 
-- **Read-Only by Default:** All standard query execution should be scoped to a read-only database user (DML role app_runner).
+- **Read-Only by Default:** Standard query execution should be scoped to a read-only database user (DML role `app_runner`).
 - **Identifier Protection:** All schemas, tables, and column parameters enforce alphanumeric regex patterns to prevent SQL injection.
+- **Result Row Limit:** Enforce `max_rows` (default 50, maximum 250) to prevent buffer exhaustion.
 
 ## 5. Atomic Write Strategy
 
@@ -41,26 +46,37 @@ DB_PASSWORD=${VAULT_SECRET_DB_PASSWORD}
 ## 6. Multi-Agent Deployment & Verification Plan
 
 ### ▶️ If you are on Antigravity / Hermes Agent:
-Configure this server in your agent's `mcp_config.json`:
+Configure this server in your agent's `mcp_config.json` using the verified PyPI package:
 ```json
 {
   "mcpServers": {
     "postgres": {
-      "command": "npx",
-      "args": ["-y", "mcp-server-postgres"]
+      "command": "uvx",
+      "args": ["postgres-mcp", "--access-mode=restricted"]
+    }
+  }
+}
+```
+*Alternatively, for custom hardened Node.js wrapper:*
+```json
+{
+  "mcpServers": {
+    "postgres-mcp": {
+      "command": "node",
+      "args": ["./mcps/postgres-mcp/index.js"]
     }
   }
 }
 ```
 
-### ▶️ If you are on Cline / Roo Code:
-Add to `.clinerules` / `.roo-code-instructions` or the global MCP settings:
+### ▶️ If you are on Cline / Roo Code / OpenCode:
+Add to `.clinerules` / `.roo-code-instructions` or global MCP settings:
 ```json
 {
   "mcpServers": {
     "postgres": {
-      "command": "npx",
-      "args": ["-y", "mcp-server-postgres"]
+      "command": "uvx",
+      "args": ["postgres-mcp", "--access-mode=restricted"]
     }
   }
 }

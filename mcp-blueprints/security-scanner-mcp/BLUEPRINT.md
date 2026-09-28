@@ -8,7 +8,7 @@ The `security-scanner-mcp` is a specialized Model Context Protocol (MCP) server 
 graph TD
     Agent([AI Agent / Auditor]) -->|JSON RPC| MCP[security-scanner-mcp]
     MCP --> ScanEngine{Scanner Dispatcher}
-    ScanEngine --> HostCheck[Linux Host Auditor - SSH / UFW / Fail2ban]
+    ScanEngine --> HostCheck[Host Auditor - SSH / UFW / Socket]
     ScanEngine --> PortCheck[Socket & Listening Ports Auditor]
     ScanEngine --> DepCheck[Package Vulnerability Checker]
     ScanEngine --> Validator[Findings Schema Validator]
@@ -38,19 +38,48 @@ REPORT_OUTPUT_DIR=./security-reports
 ## 4. Least Privilege Design
 
 - **Read-Only Inspection:** Performs non-destructive reads of system states (`/etc/ssh/sshd_config`, listening sockets, lockfiles).
-- **No Direct Shell String Execution:** All system queries are executed via array-argument subprocesses or native Python system libraries (`socket`, `psutil`).
+- **No Direct Shell String Execution:** All system queries are executed via array-argument subprocesses or native system libraries (`socket`, `psutil`).
 - **Secret Redaction:** Automatically redacts API keys, credentials, and passwords found in scanned files.
+- **Bounded Inputs:** All paths, hostnames, and scopes enforce regex patterns and maxLength caps in `schemas/tools.json`.
 
 ## 5. Atomic Write Strategy
 
 - When generating audit deliverables (`coverage-ledger.json`, `findings.json`, `REPORT.md`), writes are performed to `.tmp` files first and atomically replaced to prevent file corruption.
 
-## 6. Tools Provided
+## 6. Multi-Agent Deployment & Verification Plan
 
-1. `audit_host_security`: Audits SSH daemon settings, firewall status, and intrusion prevention configurations.
-2. `audit_listening_ports`: Scans local listening sockets (`ss -tulpn`) and correlates them against firewall rules.
-3. `validate_audit_findings`: Validates `findings.json` and `coverage-ledger.json` against Cloudflare's report schema.
-4. `scan_dependency_vulnerabilities`: Audits project manifests (`package.json`, `requirements.txt`, `go.mod`) for known CVEs.
+### ▶️ If you are on Antigravity / Hermes Agent:
+Configure in `mcp_config.json`:
+```json
+{
+  "mcpServers": {
+    "security-scanner": {
+      "command": "node",
+      "args": ["./mcps/security-scanner-mcp/index.js"]
+    }
+  }
+}
+```
+
+### ▶️ If you are on Cline / Roo Code / OpenCode:
+```json
+{
+  "mcpServers": {
+    "security-scanner": {
+      "command": "node",
+      "args": ["./mcps/security-scanner-mcp/index.js"]
+    }
+  }
+}
+```
+
+### ⚠️ If you do NOT have MCP support (Fallback):
+- Run standard audit tools directly in terminal:
+  - For CVEs: `npm audit`, `pip-audit`, or `govulncheck ./...`
+  - For ports: `netstat -ano` (Windows) or `ss -tulpn` (Linux)
+  - For findings validation: Run custom validation script against JSON schema.
+
+Verify installation by calling `audit_listening_ports` with protocol `"all"`.
 
 ---
 **Author:** JimmyR  
