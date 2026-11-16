@@ -88,6 +88,11 @@ Add to `.clinerules` / `.roo-code-instructions` or global MCP settings:
 
 Verify installation by calling `list_databases` or `list_tables`.
 
+## Authorization Scope & Negative Test Case
+
+- **Authorization Scope:** Enforce PostgreSQL Row-Level Security (RLS) on tenant/user-owned tables, binding `app.current_owner_id` from the authenticated database role or server session—never from a tool query parameter.
+- **Negative Test Case:** Authenticate as User A (`role_tenant_a`) and invoke `execute_query` requesting User B's row (`WHERE owner_id = '<tenant_b_uuid>'`); expect zero rows returned or `403`/`permission denied`.
+
 ---
 **Author:** JimmyR  
 **Powered by:** AntigravityAI

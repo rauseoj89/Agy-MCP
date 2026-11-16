@@ -5,6 +5,7 @@
       "description": "Show the working tree status.",
       "inputSchema": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "path": {
             "type": "string",
@@ -19,6 +20,7 @@
       "description": "Add file contents to the staging index.",
       "inputSchema": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "path": {
             "type": "string",
@@ -41,6 +43,7 @@
       "description": "Record changes to the repository with conventional commits validation.",
       "inputSchema": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "path": {
             "type": "string",
@@ -61,6 +64,7 @@
       "description": "Show changes between commits, commit and working tree, etc.",
       "inputSchema": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "path": {
             "type": "string",
@@ -72,9 +76,10 @@
     },
     {
       "name": "git_log",
-      "description": "Show commit logs.",
+      "description": "Retrieve recent repository commit history with hashes, authors, dates, and messages (read-only).",
       "inputSchema": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "path": {
             "type": "string",
@@ -96,6 +101,7 @@
       "description": "Update remote refs. Blocks force-pushing for safety.",
       "inputSchema": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "path": {
             "type": "string",
@@ -120,6 +126,7 @@
       "description": "Show what revision and author last modified each line of a file.",
       "inputSchema": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "path": {
             "type": "string",

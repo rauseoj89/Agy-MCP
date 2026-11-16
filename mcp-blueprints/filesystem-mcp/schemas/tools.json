@@ -5,6 +5,7 @@
       "description": "Read the contents of a file.",
       "inputSchema": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "path": {
             "type": "string",
@@ -20,6 +21,7 @@
       "description": "Write a complete file.",
       "inputSchema": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "path": {
             "type": "string",
@@ -40,6 +42,7 @@
       "description": "Append content to an existing file.",
       "inputSchema": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "path": {
             "type": "string",
@@ -60,6 +63,7 @@
       "description": "Read multiple files in a single batch operation.",
       "inputSchema": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "paths": {
             "type": "array",
@@ -79,6 +83,7 @@
       "description": "Create a new directory.",
       "inputSchema": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "path": {
             "type": "string",
@@ -94,6 +99,7 @@
       "description": "List contents of a directory.",
       "inputSchema": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "path": {
             "type": "string",
@@ -109,6 +115,7 @@
       "description": "Move or rename a file/directory.",
       "inputSchema": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "source": {
             "type": "string",
@@ -129,6 +136,7 @@
       "description": "Retrieve file metadata (size, permissions, timestamps).",
       "inputSchema": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "path": {
             "type": "string",
@@ -144,6 +152,7 @@
       "description": "Search for files matching a pattern.",
       "inputSchema": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "path": {
             "type": "string",

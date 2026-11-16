@@ -32,6 +32,7 @@ const TOOLS = [
     description: "Performs mathematical calculations securely on input parameters.",
     inputSchema: {
       type: "object",
+      additionalProperties: false,
       properties: {
         operation: {
           type: "string",
@@ -64,7 +65,19 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
   const { name, arguments: args } = request.params;
 
   if (name === "secure_calculate") {
+    if (!args || typeof args !== "object" || Array.isArray(args)) {
+      return { isError: true, content: [{ type: "text", text: "Error: Invalid arguments object" }] };
+    }
+    const allowedKeys = new Set(["operation", "a", "b"]);
+    for (const key of Object.keys(args)) {
+      if (!allowedKeys.has(key)) {
+        return { isError: true, content: [{ type: "text", text: `Error: Unexpected parameter '${key}'` }] };
+      }
+    }
     const { operation, a, b } = args;
+    if (typeof a !== "number" || typeof b !== "number" || !Number.isFinite(a) || !Number.isFinite(b)) {
+      return { isError: true, content: [{ type: "text", text: "Error: 'a' and 'b' must be finite numbers" }] };
+    }
     
     switch (operation) {
       case "add":

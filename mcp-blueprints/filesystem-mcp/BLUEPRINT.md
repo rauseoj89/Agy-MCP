@@ -51,6 +51,11 @@ Deploy using npx, specifying allowlisted paths:
 ```
 Verify by calling `list_directory` on an allowed path to confirm files can be read.
 
+## Authorization Scope & Negative Test Case
+
+- **Authorization Scope:** Canonicalize all paths with `fs.realpathSync()` (resolving symlinks and `..` segments) *before* checking against the server-configured workspace allowlist—never before symlink resolution.
+- **Negative Test Case:** Invoke `read_file` with a symlink inside the workspace pointing outside (or `../../etc/passwd`); expect `Access Denied` before any file descriptor is opened.
+
 ---
 **Author:** JimmyR  
 **Powered by:** AntigravityAI

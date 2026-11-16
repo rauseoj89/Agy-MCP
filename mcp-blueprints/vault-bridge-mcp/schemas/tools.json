@@ -5,6 +5,7 @@
       "description": "Retrieve a secret value from the vault.",
       "inputSchema": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "namespace": {
             "type": "string",
@@ -30,6 +31,7 @@
       "description": "Store a new secret or update an existing secret value.",
       "inputSchema": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "namespace": {
             "type": "string",
@@ -58,6 +60,7 @@
       "description": "List keys under a secret storage path.",
       "inputSchema": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "namespace": {
             "type": "string",
@@ -77,6 +80,7 @@
       "description": "Generate a new secret value and rotate it in the vault.",
       "inputSchema": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "namespace": {
             "type": "string",
@@ -101,6 +105,7 @@
       "description": "Retrieve audit logs tracking access to a specific secret path.",
       "inputSchema": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "namespace": {
             "type": "string",

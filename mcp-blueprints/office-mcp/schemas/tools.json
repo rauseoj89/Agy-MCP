@@ -4,10 +4,12 @@
       "name": "read_office_file",
       "description": "Read raw text content from existing Word (.docx), PowerPoint (.pptx), Excel (.xlsx), or PDF files.",
       "inputSchema": {
+        "additionalProperties": false,
         "properties": {
           "filePath": {
             "description": "Path to the document to read",
-            "type": "string"
+            "type": "string",
+            "maxLength": 4096
           }
         },
         "required": [
@@ -20,6 +22,7 @@
       "name": "write_excel_sheet",
       "description": "Create a new styled Microsoft Excel (.xlsx) workbook with multiple sheets, styled headers, and data rows.",
       "inputSchema": {
+        "additionalProperties": false,
         "properties": {
           "data": {
             "properties": {
@@ -30,10 +33,12 @@
                       "items": {
                         "properties": {
                           "header": {
-                            "type": "string"
+                            "type": "string",
+            "maxLength": 4096
                           },
                           "key": {
-                            "type": "string"
+                            "type": "string",
+            "maxLength": 4096
                           },
                           "width": {
                             "type": "number"
@@ -48,7 +53,8 @@
                       "type": "array"
                     },
                     "name": {
-                      "type": "string"
+                      "type": "string",
+            "maxLength": 4096
                     },
                     "rows": {
                       "items": {
@@ -60,11 +66,13 @@
                       "properties": {
                         "headerColor": {
                           "description": "Hex text color (e.g. FFFFFF)",
-                          "type": "string"
+                          "type": "string",
+            "maxLength": 4096
                         },
                         "headerFill": {
                           "description": "Hex fill (e.g. 1F4E78)",
-                          "type": "string"
+                          "type": "string",
+            "maxLength": 4096
                         }
                       },
                       "type": "object"
@@ -87,7 +95,8 @@
           },
           "filePath": {
             "description": "Path where the .xlsx file will be created",
-            "type": "string"
+            "type": "string",
+            "maxLength": 4096
           }
         },
         "required": [
@@ -101,20 +110,24 @@
       "name": "write_pdf_document",
       "description": "Create a formatted PDF report with title, subtitle, divider lines, and text wrapping.",
       "inputSchema": {
+        "additionalProperties": false,
         "properties": {
           "data": {
             "properties": {
               "paragraphs": {
                 "items": {
-                  "type": "string"
+                  "type": "string",
+            "maxLength": 4096
                 },
                 "type": "array"
               },
               "subtitle": {
-                "type": "string"
+                "type": "string",
+            "maxLength": 4096
               },
               "title": {
-                "type": "string"
+                "type": "string",
+            "maxLength": 4096
               }
             },
             "required": [
@@ -125,7 +138,8 @@
           },
           "filePath": {
             "description": "Path where the PDF will be created",
-            "type": "string"
+            "type": "string",
+            "maxLength": 4096
           }
         },
         "required": [
@@ -139,6 +153,7 @@
       "name": "write_powerpoint_presentation",
       "description": "Create a styled PowerPoint (.pptx) presentation deck with slide titles, bullet points, and text cards.",
       "inputSchema": {
+        "additionalProperties": false,
         "properties": {
           "data": {
             "properties": {
@@ -152,13 +167,15 @@
                             "type": "boolean"
                           },
                           "color": {
-                            "type": "string"
+                            "type": "string",
+            "maxLength": 4096
                           },
                           "fontSize": {
                             "type": "number"
                           },
                           "text": {
-                            "type": "string"
+                            "type": "string",
+            "maxLength": 4096
                           }
                         },
                         "required": [
@@ -169,7 +186,8 @@
                       "type": "array"
                     },
                     "title": {
-                      "type": "string"
+                      "type": "string",
+            "maxLength": 4096
                     }
                   },
                   "type": "object"
@@ -184,7 +202,8 @@
           },
           "filePath": {
             "description": "Path where the .pptx file will be created",
-            "type": "string"
+            "type": "string",
+            "maxLength": 4096
           }
         },
         "required": [
@@ -198,6 +217,7 @@
       "name": "write_word_document",
       "description": "Create a new styled Microsoft Word (.docx) document with titles, sections, paragraphs, bullet points, and tables.",
       "inputSchema": {
+        "additionalProperties": false,
         "properties": {
           "data": {
             "description": "Structured document content",
@@ -210,21 +230,24 @@
                         "properties": {
                           "headers": {
                             "items": {
-                              "type": "string"
+                              "type": "string",
+            "maxLength": 4096
                             },
                             "type": "array"
                           },
                           "rows": {
                             "items": {
                               "items": {
-                                "type": "string"
+                                "type": "string",
+            "maxLength": 4096
                               },
                               "type": "array"
                             },
                             "type": "array"
                           },
                           "text": {
-                            "type": "string"
+                            "type": "string",
+            "maxLength": 4096
                           },
                           "type": {
                             "enum": [
@@ -232,7 +255,8 @@
                               "bullet",
                               "table"
                             ],
-                            "type": "string"
+                            "type": "string",
+            "maxLength": 4096
                           }
                         },
                         "type": "object"
@@ -240,7 +264,8 @@
                       "type": "array"
                     },
                     "heading": {
-                      "type": "string"
+                      "type": "string",
+            "maxLength": 4096
                     },
                     "level": {
                       "description": "1 to 3",
@@ -256,10 +281,12 @@
                 "type": "array"
               },
               "subtitle": {
-                "type": "string"
+                "type": "string",
+            "maxLength": 4096
               },
               "title": {
-                "type": "string"
+                "type": "string",
+            "maxLength": 4096
               }
             },
             "required": [
@@ -270,7 +297,8 @@
           },
           "filePath": {
             "description": "Path where the .docx file will be created",
-            "type": "string"
+            "type": "string",
+            "maxLength": 4096
           }
         },
         "required": [

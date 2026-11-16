@@ -5,6 +5,7 @@
       "description": "List all databases on the PostgreSQL server.",
       "inputSchema": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {},
         "required": []
       }
@@ -14,6 +15,7 @@
       "description": "List all tables in the current active database schema.",
       "inputSchema": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "schema": {
             "type": "string",
@@ -30,6 +32,7 @@
       "description": "Show columns, types, indexes, and constraints for a table.",
       "inputSchema": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "schema": {
             "type": "string",
@@ -51,6 +54,7 @@
       "description": "Execute a SQL query (SELECT/DML/DDL). Defaults to read-only transaction execution.",
       "inputSchema": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "sql": {
             "type": "string",
@@ -73,6 +77,7 @@
       "description": "Run EXPLAIN ANALYZE on a SQL statement to retrieve its query execution plan.",
       "inputSchema": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "sql": {
             "type": "string",
@@ -87,6 +92,7 @@
       "description": "List all schemas in the active database.",
       "inputSchema": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {},
         "required": []
       }

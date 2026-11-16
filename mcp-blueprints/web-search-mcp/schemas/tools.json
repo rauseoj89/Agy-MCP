@@ -5,6 +5,7 @@
       "description": "Query Brave or DuckDuckGo for public web listings.",
       "inputSchema": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "query": {
             "type": "string",
@@ -27,6 +28,7 @@
       "description": "Retrieve content of a remote URL. Strictly enforces HTTPS.",
       "inputSchema": {
         "type": "object",
+        "additionalProperties": false,
         "properties": {
           "url": {
             "type": "string",

@@ -5,7 +5,7 @@ This directory contains a clean, production-ready template for building custom M
 ## 🚀 Getting Started
 
 ### 1. Install Dependencies
-Run npm install in this folder to install the required MCP SDK:
+Run npm install in this folder to install the pinned MCP SDK (tested with `@modelcontextprotocol/sdk@1.32.2`):
 ```bash
 npm install
 ```

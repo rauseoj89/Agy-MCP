@@ -70,6 +70,11 @@ Add to the user's active configuration file:
 
 Verify operation by calling `list_secrets` on a non-production path.
 
+## Authorization Scope & Negative Test Case
+
+- **Authorization Scope:** Enforce Vault namespace and path allowlists server-side per AppRole policy. Callers cannot traverse or read another team's KV paths by altering the `path` tool argument.
+- **Negative Test Case:** Authenticate with Team A's AppRole and call `get_secret` with `path: "secret/data/team-b/api-key"`; expect `403 permission denied` from Vault.
+
 ---
 **Author:** JimmyR  
 **Powered by:** AntigravityAI
